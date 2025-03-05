@@ -12,5 +12,8 @@ public class FulltimeVO {
 
     FulltimeVO(String name, String empNo, int result, int basicSalary){
         // input, update시 사용
+        // 생성자에서 필요로 하는 필드만 사용하여 DB 생성
+        // DB 명은 Fulltime, 각 칼럼명은 필드명과 동일하게
+        // 시간 남으면 파트타임 모델도 시도해보기
     }
 }

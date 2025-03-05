@@ -21,6 +21,8 @@ public class StudentVO {
 
     StudentVO(String name, String sno, int korean, int english, int math, int science) {
         // input, update시 사용
+        // 생성자에서 필요로 하는 필드만 사용하여 DB 생성
+        // DB 명은 Fulltime, 각 칼럼명은 필드명과 동일하게
     }
 
 }
