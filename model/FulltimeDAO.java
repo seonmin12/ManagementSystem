@@ -6,6 +6,7 @@ import vo.StudentVO;
 import java.util.ArrayList;
 
 public class FulltimeDAO implements Fulltime  {
+    // branch test
     private static FulltimeDAO dao;
 
     private FulltimeDAO(){ }
