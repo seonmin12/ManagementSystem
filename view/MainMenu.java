@@ -6,6 +6,7 @@ import controller.ControllerImpl;
 import java.util.Scanner;
 
 public class MainMenu {
+    // 브랜치 테스트
     private Controller control;
     private Scanner scan;
 
