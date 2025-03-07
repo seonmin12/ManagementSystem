@@ -13,9 +13,9 @@ public interface Controller {
     void delete(int deleteNum);
 
     void update(StudentVO newStudent);
-    void update(Fulltime newFulltime);
+    void update(FulltimeVO newFulltime);
 
     void totalSearch();
-    void Search(int searchNum);
+    void search(int searchNum);
 
 }
