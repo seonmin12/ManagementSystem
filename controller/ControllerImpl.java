@@ -71,7 +71,7 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void update(FulltimeVO newFulltime) {
-        //fulltimeEmp.update(newFulltime);
+        fulltimeEmp.update(newFulltime);
     }
 
     @Override

@@ -39,7 +39,7 @@ public class FulltimeDAO implements Fulltime  {
     }
 
     @Override
-    public void updqte(FulltimeVO newFulltime) {
+    public void update(FulltimeVO newFulltime) {
 
     }
 

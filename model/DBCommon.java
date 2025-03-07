@@ -10,7 +10,7 @@ public interface DBCommon {
     void delete(int deleteNum);
 
     void update(StudentVO newStudent);
-    void updqte(FulltimeVO newFulltime);
+    void update(FulltimeVO newFulltime);
 
     void totalSearch();
     void search(int searchNum);

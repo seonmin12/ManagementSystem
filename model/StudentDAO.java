@@ -39,7 +39,7 @@ public class StudentDAO implements Student {
     }
 
     @Override
-    public void updqte(FulltimeVO newFulltime) {
+    public void update(FulltimeVO newFulltime) {
 
     }
 
