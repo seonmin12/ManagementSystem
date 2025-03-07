@@ -9,7 +9,7 @@ public class DBUtil {
     private static ResourceBundle bundle; // ResourceBundle객체 변수 선언
 
     static {
-        bundle = ResourceBundle.getBundle("src/jdbc/advanced/boards/config/dbinfo");
+        bundle = ResourceBundle.getBundle("util/dbinfo");
 
         try {
             Class.forName(bundle.getString("driver"));
