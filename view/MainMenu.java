@@ -77,7 +77,7 @@ public class MainMenu {
                     break;
                 case 5:
                     //학생 검색
-                    SSearch();
+                    Ssearch();
                     break;
                 case 6:
                     //학생 종료
@@ -120,11 +120,12 @@ public class MainMenu {
     }
     void Sdelete(){
         System.out.println("\t------------------------------");
-        System.out.print("\t삭제할 학번:");
+        System.out.print("\t삭제할 학번: ");
         int deleteNum = scan.nextInt();
         System.out.println("\t------------------------------");
 
         control.delete(deleteNum);
+
     }
     void Supdate(){
         System.out.println("\t------------------------------");
@@ -132,7 +133,7 @@ public class MainMenu {
         String sno = scan.next();
         System.out.println("\t------------------------------");
 
-        System.out.print("\t이름 :");
+        System.out.print("\t이름: ");
         String nname = scan.next();
         System.out.print("\t국어 점수: ");
         int nkorean = scan.nextInt();
@@ -152,7 +153,7 @@ public class MainMenu {
 
         control.totalSearch();
     }
-    void SSearch(){
+    void Ssearch(){
 
         System.out.println("\t------------------------------");
         System.out.print("\t검색할 학번: ");
@@ -196,7 +197,7 @@ public class MainMenu {
                     break;
                 case 3:
                     //직원 수정
-                    EUpdate();
+                    Eupdate();
                     break;
                 case 4:
                     //직원 명단
@@ -204,7 +205,7 @@ public class MainMenu {
                     break;
                 case 5:
                     //직원 검색
-                    ESearch();
+                    Esearch();
                     break;
                 case 6:
                     //직원 종료
@@ -232,14 +233,14 @@ public class MainMenu {
 
     void Edelete(){
         System.out.println("\t------------------------------");
-        System.out.print("\t삭제할 사번:");
+        System.out.print("\t삭제할 사번: ");
         int deleteNum = scan.nextInt();
         System.out.println("\t------------------------------");
 
         control.delete(deleteNum);
     }
 
-    void EUpdate(){
+    void Eupdate(){
         System.out.println("\t------------------------------");
         System.out.print("\t수정할 사번: ");
         String eno = scan.next();
@@ -260,7 +261,7 @@ public class MainMenu {
         control.totalSearch();
     }
 
-    void ESearch(){
+    void Esearch(){
         System.out.println("\t------------------------------");
         System.out.print("\t검색할 사번: ");
         int searchNum = scan.nextInt();  // 사용자 입력 받기
