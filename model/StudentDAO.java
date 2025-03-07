@@ -59,7 +59,8 @@ public class StudentDAO implements Student {
             cs.setInt(5, newStudent.getMath());
             cs.setInt(6, newStudent.getScience());
             cs.execute();
-            int rtn = cs.getInt(2);
+
+            int rtn = cs.getInt(7);
             String resultString = null;
             if (rtn == 100) {
                 resultString = "수정 실패";
@@ -345,7 +346,7 @@ public class StudentDAO implements Student {
             conn = DBUtil.getConnection();
 
             cs = conn.prepareCall("{call STUDENT_INSERT(?,?,?,?,?,?,?)}");
-
+            System.out.println(newStudent.getName());
             cs.setString(1, newStudent.getSno());
             cs.setString(2, newStudent.getName());
             cs.setInt(3, newStudent.getKorean());
@@ -354,8 +355,7 @@ public class StudentDAO implements Student {
             cs.setInt(6, newStudent.getScience());
 
             cs.registerOutParameter(7, Types.INTEGER);
-            boolean flag = cs.execute();
-
+            cs.execute();
 
             int rtn = cs.getInt(7);
             String resultString = null;
@@ -366,7 +366,6 @@ public class StudentDAO implements Student {
                 resultString = "입력성공";
                 System.out.println(resultString);
             }
-
             if (cs != null) cs.close();
             if (conn != null) conn.close();
         }catch (SQLException e){
