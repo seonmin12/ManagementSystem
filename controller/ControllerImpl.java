@@ -2,6 +2,7 @@ package controller;
 
 import model.Fulltime;
 import model.FulltimeDAO;
+import model.ParttimeDAO;
 import model.StudentDAO;
 import vo.FulltimeVO;
 import vo.ParttimeVO;
@@ -61,6 +62,11 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
+    public void input(ParttimeVO parttimeVO) {
+
+    }
+
+    @Override
     public void delete(String deleteNum) {
         if (this.selectModel == 1) {
             student.delete(deleteNum);
@@ -79,6 +85,11 @@ public class ControllerImpl implements Controller {
     @Override
     public void update(FulltimeVO newFulltime) {
         fulltimeEmp.update(newFulltime);
+    }
+
+    @Override
+    public void update(ParttimeVO newParttime) {
+
     }
 
     @Override

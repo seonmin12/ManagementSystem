@@ -1,9 +1,10 @@
 package vo;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-
+@EqualsAndHashCode(callSuper = true)
 public class FulltimeVO extends EmployeeVO {
 
     private int result; // 실적
@@ -12,7 +13,7 @@ public class FulltimeVO extends EmployeeVO {
 
 
 
-    FulltimeVO(String name, String empNo, int result, int basicSalary){
+    public FulltimeVO(String name, String empNo, int result, int basicSalary){
       super(name, empNo);
       this.result = result;
       this.basicSalary = basicSalary;
