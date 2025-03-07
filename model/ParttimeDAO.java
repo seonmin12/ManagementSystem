@@ -15,7 +15,7 @@ public class ParttimeDAO implements Parttime{
 
     private ParttimeDAO() {}
 
-    private static ParttimeDAO getInstance() {
+    public static ParttimeDAO getInstance() {
 
         if(dao == null) dao = new ParttimeDAO();
         return dao;
@@ -26,6 +26,7 @@ public class ParttimeDAO implements Parttime{
     private PreparedStatement pstmt;
     private Statement stmt;
     private ResultSet rs;
+    private CallableStatement cs;
 
     // 사용한 자원 반납하는 메소드
     private void disconnect(){
@@ -40,7 +41,8 @@ public class ParttimeDAO implements Parttime{
 
     @Override
     public void input(EmployeeVO newEmployee) {
-        ParttimeVO parttime = new ParttimeVO();
+
+        ParttimeVO parttime = null;
         if(newEmployee instanceof ParttimeVO){
             parttime = (ParttimeVO) newEmployee;
 
@@ -50,18 +52,27 @@ public class ParttimeDAO implements Parttime{
 
         }
         try {
-
-
             conn = DBUtil.getConnection();
-            String sql = "insert into Parttime (name,empNo,wage) values (?,?,?)";
-            pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            conn.setAutoCommit(false);
 
-            pstmt.setString(1,newEmployee.getName());
-            pstmt.setString(2, newEmployee.getEmpNo());
-            pstmt.setInt(3,parttime.getWage());
+            cs = conn.prepareCall("{call PARTTIME_INSERT(?,?,?,?,?)}");
+
+            cs.setString(1, parttime.getEmpNo());
+            cs.setString(2, parttime.getName());
+            cs.setInt(3, parttime.getHourWage());
+            cs.setInt(4, parttime.getWorkHour());
+
+            cs.registerOutParameter(5, java.sql.Types.INTEGER);
+
+            boolean flag = cs.execute();
+            System.out.println(flag);
+
+            int resultMsg = cs.getInt(5);
+            System.out.println(resultMsg);
 
 
-            pstmt.executeUpdate();
+
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -81,34 +92,32 @@ public class ParttimeDAO implements Parttime{
         }
         try {
             conn = DBUtil.getConnection();
-            String sql = "update Parttime set "
-                    + "name = ?, "
-                    + "hourWage =?, "
-                    + "workHour = ?, "
-                    + "where empNo = ? ";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, newEmployee.getName());
-            pstmt.setInt(2,parttime.getHourWage());
-            pstmt.setInt(3,parttime.getWorkHour());
-            pstmt.setString(4, newEmployee.getEmpNo());
+            conn.setAutoCommit(false);
 
-            pstmt.executeUpdate();
-            parttimeList.add((ParttimeVO) newEmployee);
-            parttime.setWage(parttime.getWorkHour() * parttime.getHourWage());
-
-            for(ParttimeVO parttimeVO : parttimeList){
-                System.out.println(newEmployee);
-            }
+            cs = conn.prepareCall("{call PARTTIME_UPDATE(?,?,?,?,?)}");
 
 
+            // 바인드 변수에 값 세팅(in parameter)
+            cs.setString(1, parttime.getEmpNo());
+            cs.setString(2, parttime.getName());
+            cs.setInt(3,parttime.getHourWage());
+            cs.setInt(4, parttime.getWorkHour());
 
+            // out 파라미터에 저장된 프로시저의 수행결과에 대한 외부 변수 등록
+            cs.registerOutParameter(5, java.sql.Types.INTEGER);
+
+            // 쿼리 수행, flag 값은 RS의 경우 true, 갱신, 카운트 또는 결과가 없는 경우 false 리턴
+            boolean flag = cs.execute();
+            System.out.println(flag);
+
+            int resultMsg = cs.getInt(5);
+            System.out.println(resultMsg);
 
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             disconnect();
         }
-
 
     }
 
@@ -118,11 +127,18 @@ public class ParttimeDAO implements Parttime{
     public void delete(String deleteNum) {
         try {
             conn = DBUtil.getConnection();
-            String sql = "delete from Parttime where empNo = ?";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, deleteNum);
+            conn.setAutoCommit(false);
 
-            pstmt.executeUpdate();
+            cs = conn.prepareCall("{call PARTTIME_DELETE(?,?)}");
+
+            cs.setString(1, deleteNum);
+            cs.registerOutParameter(2,java.sql.Types.INTEGER);
+
+            boolean flag = cs.execute();
+            System.out.println(flag);
+
+            String resultMsg = cs.getString(2);
+            System.out.println(resultMsg);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -188,8 +204,8 @@ public class ParttimeDAO implements Parttime{
 
             while(rs.next()){
                 ParttimeVO parttimeVO = new ParttimeVO();
-                parttimeVO.setName(rs.getString("name"));
                 parttimeVO.setEmpNo(rs.getString("empNo"));
+                parttimeVO.setName(rs.getString("name"));
                 parttimeVO.setHourWage(rs.getInt("hourWage"));
                 parttimeVO.setWorkHour(rs.getInt("workHour"));
 

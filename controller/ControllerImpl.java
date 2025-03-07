@@ -8,6 +8,8 @@ import vo.FulltimeVO;
 import vo.ParttimeVO;
 import vo.StudentVO;
 
+import java.util.Scanner;
+
 public class ControllerImpl implements Controller {
     private StudentDAO student;
     private FulltimeDAO fulltimeEmp;
@@ -19,6 +21,7 @@ public class ControllerImpl implements Controller {
     private ControllerImpl(){
         student = StudentDAO.getInstance();
         fulltimeEmp = FulltimeDAO.getInstance();
+        parttimeEmp = ParttimeDAO.getInstance();
     }
 
     public static ControllerImpl getInstance(){
@@ -62,8 +65,8 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void input(ParttimeVO parttimeVO) {
-
+    public void input(ParttimeVO newParttime) {
+        parttimeEmp.input(newParttime);
     }
 
     @Override
@@ -73,7 +76,7 @@ public class ControllerImpl implements Controller {
         }else if(this.selectModel == 2){
             fulltimeEmp.delete(deleteNum);
         } else if (this.selectModel == 3) {
-
+            parttimeEmp.delete(deleteNum);
         }
     }
 
@@ -89,7 +92,7 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void update(ParttimeVO newParttime) {
-
+        parttimeEmp.update(newParttime);
     }
 
     @Override
@@ -98,6 +101,14 @@ public class ControllerImpl implements Controller {
             student.totalSearch();
         } else if (this.selectModel == 2) {
             fulltimeEmp.totalSearch();
+            System.out.println("\t------------------------------\n" +
+                    "\t전체 직원의 월급을 인상하시겠습니까? (y/n) : ");
+            if (new Scanner(System.in).next().equals("y")){
+                // 월급 인상
+            }
+
+        } else if (this.selectModel == 3) {
+            parttimeEmp.totalSearch();
         }
     }
 
@@ -107,6 +118,8 @@ public class ControllerImpl implements Controller {
             student.search(searchNum);
         } else if (this.selectModel == 2) {
             fulltimeEmp.search(searchNum);
+        } else if (this.selectModel == 3) {
+            parttimeEmp.search(searchNum);
         }
     }
 
