@@ -122,21 +122,43 @@ public class FulltimeDAO implements Fulltime  {
 
 
 
-//            String sql = "update Fulltime set "
-//                    + "name = ?, "
-//                    + "result =?, "
-//                    + "basicSalary = ?, "
-//                    + "where empNo = ? ";
-//            pstmt = conn.prepareStatement(sql);
-//            pstmt.setString(1, newEmployee.getName());
-//            pstmt.setInt(2,fulltime.getResult());
-//            pstmt.setInt(3,fulltime.getBasicSalary());
-//            pstmt.setString(4, fulltime.getEmpNo());
-//
-//            pstmt.executeUpdate();
-//            fulltimeList.add(fulltime);
-//            calcRankAndPercent(newFulltime);
-//            calcSalaryIncrease(newFulltime);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            disconnect();
+        }
+
+
+    }
+
+    @Override
+    public void calcincreasesalary(EmployeeVO newEmployee) {
+        FulltimeVO fulltime = new FulltimeVO();
+        if(newEmployee instanceof FulltimeVO){
+            fulltime = (FulltimeVO) newEmployee;
+
+        }else {
+            System.out.println("업데이트 할 직원은 풀타임이 아닙니다.");
+            return;
+
+        }
+        try {
+            conn = DBUtil.getConnection();
+            conn.setAutoCommit(false);
+
+            cs = conn.prepareCall("{call FULLTIME_SALARY_RAISE(?)}");
+
+
+            // out 파라미터에 저장된 프로시저의 수행결과에 대한 외부 변수 등록
+            cs.registerOutParameter(1, java.sql.Types.INTEGER);
+
+            // 쿼리 수행, flag 값은 RS의 경우 true, 갱신, 카운트 또는 결과가 없는 경우 false 리턴
+            boolean flag = cs.execute();
+            System.out.println(flag);
+
+            int resultMsg = cs.getInt(1);
+            System.out.println(resultMsg);
 
 
 
@@ -146,7 +168,6 @@ public class FulltimeDAO implements Fulltime  {
         } finally {
             disconnect();
         }
-
 
     }
 
@@ -285,11 +306,7 @@ public class FulltimeDAO implements Fulltime  {
 
 
             }
-            // 이제 전체 리스트가 완성되었으므로 순위와 백분율을 계산
-//            for (FulltimeVO vo : fulltimeList) {
-//                calcRankAndPercent(vo);
-//                calcSalaryIncrease(vo);
-//            }
+
 
             // 계산된 전체 리스트 출력
             for (FulltimeVO vo : fulltimeList) {
@@ -308,92 +325,7 @@ public class FulltimeDAO implements Fulltime  {
 
     }
 
-//    @Override
-//    public void assignGrade(FulltimeVO fulltimeVO) {
-//        if (fulltimeVO == null) {
-//            System.out.println("잘못된 직원 정보입니다.");
-//            return;
-//        }
-//
-//        double percentage = fulltimeVO.getPercentage(); // 백분율 가져오기
-//        char grade;
-//
-//        if (percentage <= 10) {
-//            grade = 'A';
-//        } else if (percentage <= 30) {
-//            grade = 'B';
-//        } else if (percentage <= 50) {
-//            grade = 'C';
-//        } else {
-//            grade = 'F';
-//        }
-//
-//        fulltimeVO.setResultGrade(grade);
-//
-//    }
 
-//    @Override
-//    public void calcRankAndPercent(FulltimeVO fulltimeVO) {
-//
-//        if (fulltimeList == null || fulltimeList.isEmpty() || fulltimeVO == null) {
-//            System.out.println("직원 리스트가 비어 있거나 잘못된 입력입니다.");
-//            return;
-//        }
-//
-//        //  전체 직원 리스트를 기반으로 실적 기준으로 정렬된 리스트 생성 (원본 데이터 변경 X)
-//        ArrayList<FulltimeVO> sortedList = new ArrayList<>(fulltimeList);
-//        sortedList.sort((a, b) -> Integer.compare(b.getResult(), a.getResult()));
-//
-//
-//        // 순위 찾기
-//        int totalEmployees = sortedList.size();
-//        int rank = 1;
-//
-//        for (int i = 0; i < totalEmployees; i++) {
-//            FulltimeVO current = sortedList.get(i);
-//
-//            // ✅ 동일한 실적이면 동일한 순위 유지
-//            if (i > 0 && current.getResult() < sortedList.get(i - 1).getResult()) {
-//                rank = i + 1;
-//            }
-//
-//            if (current.getEmpNo().equals(fulltimeVO.getEmpNo())) {
-//                fulltimeVO.setRank(rank);
-//                break;
-//            }
-//        }
-//
-//        // 백분율 계산 = (순위 / 전체 사원 수) * 100
-//        double percentage = ((double) fulltimeVO.getRank() / totalEmployees) * 100;
-//        fulltimeVO.setPercentage(percentage);
-//
-//        // 등급 설정
-//        assignGrade(fulltimeVO);
-//
-//
-//
-//    }
-//
-//    @Override
-//    public void calcSalaryIncrease(FulltimeVO fulltimeVO) {
-//        if (fulltimeVO == null) {
-//            System.out.println("잘못된 직원 정보입니다.");
-//            return;
-//        }
-//
-//        int increaseAmount;
-//        switch (fulltimeVO.getResultGrade()) {
-//            case 'A': increaseAmount = (int) (fulltimeVO.getBasicSalary() * 0.20); break;
-//            case 'B': increaseAmount = (int) (fulltimeVO.getBasicSalary() * 0.10); break;
-//            case 'C': increaseAmount = (int) (fulltimeVO.getBasicSalary() * 0.05); break;
-//            default: increaseAmount = 0; // 인상 없음
-//        }
-//
-//
-//        fulltimeVO.setBasicSalary(fulltimeVO.getBasicSalary() + increaseAmount);
-//
-//
-//    }
 
     @Override
     public void input(EmployeeVO newEmployee) {
