@@ -10,12 +10,12 @@ public interface Controller {
     void input(StudentVO newStudent);
     void input(FulltimeVO newFulltime);
 
-    void delete(int deleteNum);
+    void delete(String deleteNum);
 
     void update(StudentVO newStudent);
     void update(FulltimeVO newFulltime);
 
     void totalSearch();
-    void search(int searchNum);
+    void search(String searchNum);
 
 }

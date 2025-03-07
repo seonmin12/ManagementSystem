@@ -121,7 +121,7 @@ public class MainMenu {
     void Sdelete(){
         System.out.println("\t------------------------------");
         System.out.print("\t삭제할 학번: ");
-        int deleteNum = scan.nextInt();
+        String deleteNum = scan.next();
         System.out.println("\t------------------------------");
 
         control.delete(deleteNum);
@@ -157,7 +157,7 @@ public class MainMenu {
 
         System.out.println("\t------------------------------");
         System.out.print("\t검색할 학번: ");
-        int sno = scan.nextInt();
+        String sno = scan.next();
         System.out.println("\t------------------------------");
 
         control.search(sno);
@@ -234,7 +234,7 @@ public class MainMenu {
     void Edelete(){
         System.out.println("\t------------------------------");
         System.out.print("\t삭제할 사번: ");
-        int deleteNum = scan.nextInt();
+        String deleteNum = scan.next();
         System.out.println("\t------------------------------");
 
         control.delete(deleteNum);
@@ -264,7 +264,7 @@ public class MainMenu {
     void Esearch(){
         System.out.println("\t------------------------------");
         System.out.print("\t검색할 사번: ");
-        int searchNum = scan.nextInt();  // 사용자 입력 받기
+        String searchNum = scan.next();  // 사용자 입력 받기
         System.out.println("\t------------------------------");
 
         control.search(searchNum);

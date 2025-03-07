@@ -29,7 +29,7 @@ public class FulltimeDAO implements Fulltime  {
     }
 
     @Override
-    public void delete(int deleteNum) {
+    public void delete(String deleteNum) {
 
     }
 
@@ -49,7 +49,7 @@ public class FulltimeDAO implements Fulltime  {
     }
 
     @Override
-    public void search(int searchNum) {
+    public void search(String searchNum) {
 
     }
 

@@ -56,7 +56,7 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void delete(int deleteNum) {
+    public void delete(String deleteNum) {
         if (this.selectModel == 1) {
             student.delete(deleteNum);
         }else if(this.selectModel == 2){
@@ -84,7 +84,7 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void search(int searchNum) {
+    public void search(String searchNum) {
         if (this.selectModel == 1) {
             student.search(searchNum);
         } else if (this.selectModel == 2) {
