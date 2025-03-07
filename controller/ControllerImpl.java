@@ -4,11 +4,14 @@ import model.Fulltime;
 import model.FulltimeDAO;
 import model.StudentDAO;
 import vo.FulltimeVO;
+import vo.ParttimeVO;
 import vo.StudentVO;
 
 public class ControllerImpl implements Controller {
     private StudentDAO student;
     private FulltimeDAO fulltimeEmp;
+    private ParttimeDAO parttimeEmp;
+    private int selectModel = 0;
 
     private static ControllerImpl service;
 
@@ -25,41 +28,75 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void choice(int choiceNum) {
-
+        //System.out.println("choice선택");
+        switch (choiceNum){
+            case 1:
+                System.out.println("\t학생관리");
+                this.selectModel = 1;
+                break;
+            case 2:
+                System.out.println("\t직원관리");
+                this.selectModel = 2;
+                break;
+            case 3:
+                this.selectModel = 3;
+                break;
+            case 4:
+                System.exit(0);
+                break;
+            default:
+                System.out.println("\t잘못된 입력입니다. 1, 2, 3 중 하나를 선택하세요.");
+                break;
+        }
     }
 
     @Override
     public void input(StudentVO newStudent) {
-
+        student.input(newStudent);
     }
 
     @Override
     public void input(FulltimeVO newFulltime) {
-
+        fulltimeEmp.input(newFulltime);
     }
 
     @Override
-    public void delete(int deleteNum) {
+    public void delete(String deleteNum) {
+        if (this.selectModel == 1) {
+            student.delete(deleteNum);
+        }else if(this.selectModel == 2){
+            fulltimeEmp.delete(deleteNum);
+        } else if (this.selectModel == 3) {
 
+        }
     }
 
     @Override
     public void update(StudentVO newStudent) {
-
+        student.update(newStudent);
     }
 
     @Override
-    public void update(Fulltime newFulltime) {
-
+    public void update(FulltimeVO newFulltime) {
+        fulltimeEmp.update(newFulltime);
     }
 
     @Override
     public void totalSearch() {
-
+        if (this.selectModel == 1) {
+            student.totalSearch();
+        } else if (this.selectModel == 2) {
+            fulltimeEmp.totalSearch();
+        }
     }
 
     @Override
-    public void Search(int searchNum) {
-
+    public void search(String searchNum) {
+        if (this.selectModel == 1) {
+            student.search(searchNum);
+        } else if (this.selectModel == 2) {
+            fulltimeEmp.search(searchNum);
+        }
     }
+
 }

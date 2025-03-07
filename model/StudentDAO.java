@@ -36,7 +36,6 @@ public class StudentDAO implements Student {
     }
 
 
-
     @Override
     public void totalSearch() {
 
@@ -46,8 +45,6 @@ public class StudentDAO implements Student {
     public void search(String searchNum) {
 
     }
-
-
 
     @Override
     public void sort(int sortNum) {

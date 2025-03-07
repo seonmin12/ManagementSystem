@@ -30,6 +30,7 @@ public class FulltimeVO extends EmployeeVO {
                 ", 성과등급=" + resultGrade +
                 ", 월급=" + basicSalary +
                 '}';
+
     }
 }
 
