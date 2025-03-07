@@ -93,7 +93,7 @@ BEGIN
 END$$
 DELIMITER ;
 ```
-그 외 프로시저의 생성 예시는 [저장 프로시저]()를 참고하세요.
+그 외 프로시저의 생성 예시는 [저장 프로시저](https://github.com/psns0122/ms_DBProcedure)를 참고하세요.
 
 ---
 
@@ -132,7 +132,7 @@ ManagementSystem/
 - [정유진](): 사용자 인터페이스 담당 ()
 - [김성준](): 직원 모델 담당 ()
 - [김선민](): 학생 모델 담당 ()
-- [박건희](): DB 모델링 담당 (psns0122@nave.com)
+- [박건희](https://github.com/psns0122): DB 모델링 담당 (psns0122@nave.com)
 
 ---
 
