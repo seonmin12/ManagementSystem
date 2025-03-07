@@ -104,7 +104,7 @@ public class MainMenu {
         System.out.print("\t학번: ");
         String sno = scan.next();
         System.out.print("\t이름: ");
-        String name = scan.nextLine();
+        String name = scan.next();
         System.out.print("\t국어 점수: ");
         int korean = scan.nextInt();
         System.out.print("\t영어 점수: ");
@@ -128,13 +128,12 @@ public class MainMenu {
     }
     void Supdate(){
         System.out.println("\t------------------------------");
-        scan.nextLine();
         System.out.print("\t수정할 학번: ");
-        String sno = scan.nextLine();
+        String sno = scan.next();
         System.out.println("\t------------------------------");
 
         System.out.print("\t이름 :");
-        String nname = scan.nextLine();
+        String nname = scan.next();
         System.out.print("\t국어 점수: ");
         int nkorean = scan.nextInt();
         System.out.print("\t영어 점수: ");
@@ -217,11 +216,10 @@ public class MainMenu {
 
     void Einput() {
         System.out.println("\t------------------------------");
-        scan.nextLine();
         System.out.print("\t사번: ");
-        String empNo = scan.nextLine();
+        String empNo = scan.next();
         System.out.print("\t이름: ");
-        String name = scan.nextLine();
+        String name = scan.next();
         System.out.print("\t실적: ");
         int result = scan.nextInt();
         System.out.print("\t월급: ");
@@ -243,13 +241,12 @@ public class MainMenu {
 
     void EUpdate(){
         System.out.println("\t------------------------------");
-        scan.nextLine();
         System.out.print("\t수정할 사번: ");
-        String eno = scan.nextLine();
+        String eno = scan.next();
         System.out.println("\t------------------------------");
 
         System.out.print("\t이름: ");
-        String name = scan.nextLine();
+        String name = scan.next();
         System.out.print("\t실적: ");
         int result = scan.nextInt();
         System.out.print("\t월급: ");
