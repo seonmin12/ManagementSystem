@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 public class FulltimeVO extends EmployeeVO {
 
     private int result; // 실적
-    private char resultGrade; // 성과등급
     private int basicSalary; // 월급
 
 
@@ -28,7 +27,6 @@ public class FulltimeVO extends EmployeeVO {
                 "이름='" + getName() + '\'' +
                 ", 사번='" + getEmpNo() + '\'' +
                 ", 실적=" + result +
-                ", 성과등급=" + resultGrade +
                 ", 월급=" + basicSalary +
                 '}';
 

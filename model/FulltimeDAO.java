@@ -105,16 +105,7 @@ public class FulltimeDAO implements Fulltime  {
     }
 
     @Override
-    public void calcincreasesalary(EmployeeVO newEmployee) {
-        FulltimeVO fulltime = new FulltimeVO();
-        if(newEmployee instanceof FulltimeVO){
-            fulltime = (FulltimeVO) newEmployee;
-
-        }else {
-            System.out.println("업데이트 할 직원은 풀타임이 아닙니다.");
-            return;
-
-        }
+    public void calcincreasesalary() {
         try {
             conn = DBUtil.getConnection();
             conn.setAutoCommit(false);

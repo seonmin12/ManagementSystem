@@ -101,10 +101,10 @@ public class ControllerImpl implements Controller {
             student.totalSearch();
         } else if (this.selectModel == 2) {
             fulltimeEmp.totalSearch();
-            System.out.println("\t------------------------------\n" +
+            System.out.print("\t------------------------------\n" +
                     "\t전체 직원의 월급을 인상하시겠습니까? (y/n) : ");
             if (new Scanner(System.in).next().equals("y")){
-                // 월급 인상
+                fulltimeEmp.calcincreasesalary();
             }
 
         } else if (this.selectModel == 3) {

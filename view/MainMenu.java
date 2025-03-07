@@ -230,7 +230,7 @@ public class MainMenu {
         int salary = scan.nextInt();
         System.out.println("\t------------------------------");
 
-        FulltimeVO fulltimeVO = new FulltimeVO(empNo, name, result, salary);
+        FulltimeVO fulltimeVO = new FulltimeVO(name, empNo, result, salary);
         control.input(fulltimeVO);
     }
 

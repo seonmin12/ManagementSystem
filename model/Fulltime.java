@@ -9,7 +9,7 @@ public interface Fulltime extends DBCommon{
 //    void calcSalaryIncrease(FulltimeVO fulltimeVO);
     void input(EmployeeVO employeeVO);
     void update(EmployeeVO employeeVO);
-    void calcincreasesalary(EmployeeVO newEmployee);
+    void calcincreasesalary();
 
 
 }
