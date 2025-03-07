@@ -2,6 +2,7 @@ package controller;
 
 import model.Fulltime;
 import vo.FulltimeVO;
+import vo.ParttimeVO;
 import vo.StudentVO;
 
 public interface Controller {
@@ -9,13 +10,15 @@ public interface Controller {
 
     void input(StudentVO newStudent);
     void input(FulltimeVO newFulltime);
+    void input(ParttimeVO parttimeVO);
 
-    void delete(int deleteNum);
+    void delete(String deleteNum);
 
     void update(StudentVO newStudent);
-    void update(Fulltime newFulltime);
+    void update(FulltimeVO newFulltime);
+    void update(ParttimeVO newParttime);
 
     void totalSearch();
-    void Search(int searchNum);
+    void search(String searchNum);
 
 }

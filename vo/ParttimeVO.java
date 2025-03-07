@@ -1,16 +1,17 @@
 package vo;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-
+@EqualsAndHashCode(callSuper = true)
 public class ParttimeVO extends EmployeeVO {
 
     private int hourWage; // 시급
     private int workHour; // 노동시간
     private int wage; // 임금
 
-    ParttimeVO(String name, String empNo, int hourWage, int workHour) {
+    public ParttimeVO(String empNo, String name, int hourWage, int workHour) {
         super(name,empNo);
         this.hourWage = hourWage;
         this.workHour = workHour;

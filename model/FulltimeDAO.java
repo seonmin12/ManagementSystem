@@ -11,25 +11,6 @@ import java.util.ArrayList;
 
 public class FulltimeDAO implements Fulltime  {
 
-    // 테스트용 메인
-    public static void main(String[] args) {
-        FulltimeDAO dao = FulltimeDAO.getInstance();
-        FulltimeVO fulltimeVO = new FulltimeVO();
-        fulltimeVO.setEmpNo("2345");
-        fulltimeVO.setName("신숙자");
-        fulltimeVO.setResult(170);
-        fulltimeVO.setBasicSalary(5000000);
-
-
-
-        dao.update(fulltimeVO);
-
-
-
-
-
-    }
-
     private static FulltimeDAO dao;
 
     private FulltimeDAO(){ }
@@ -41,6 +22,7 @@ public class FulltimeDAO implements Fulltime  {
     }
 
     private ArrayList<FulltimeVO> fulltimeList;
+  
     private Connection conn;
     private PreparedStatement pstmt;
     private Statement stmt;
@@ -53,11 +35,7 @@ public class FulltimeDAO implements Fulltime  {
         if (stmt != null) try {stmt.close();} catch (SQLException e) {}
         if (pstmt != null) try {pstmt.close();} catch (SQLException e) {}
         if (conn != null) try {conn.close();} catch (SQLException e) {}
-
-
     }
-
-
 
     @Override
     public void delete(String deleteNum) {
@@ -79,11 +57,7 @@ public class FulltimeDAO implements Fulltime  {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
     }
-
-
 
 
     @Override
@@ -119,8 +93,6 @@ public class FulltimeDAO implements Fulltime  {
 
             String resultMsg = cs.getString(5);
             System.out.println(resultMsg);
-
-
 
 
         } catch (SQLException e) {
@@ -168,7 +140,6 @@ public class FulltimeDAO implements Fulltime  {
         } finally {
             disconnect();
         }
-
     }
 
     @Override
@@ -195,26 +166,12 @@ public class FulltimeDAO implements Fulltime  {
                 fulltime.setResult(rs.getInt("result"));
                 fulltime.setBasicSalary(rs.getInt("basicSalary"));
                 fulltimeList.add(fulltime);
-
-
-
             }
-
-
-            // 데이터 불러온 후, 모든 직원 순위 계산
-
-//            for (FulltimeVO fulltimeVO : fulltimeList) {
-//                calcRankAndPercent(fulltimeVO);
-//                calcSalaryIncrease(fulltimeVO);
-//            }
 
             // 출력
             for (FulltimeVO fulltimeVO : fulltimeList) {
                 System.out.println(fulltimeVO);
             }
-
-
-
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -222,10 +179,7 @@ public class FulltimeDAO implements Fulltime  {
             disconnect();
         }
 
-
     }
-
-
 
 
     @Override
@@ -249,8 +203,6 @@ public class FulltimeDAO implements Fulltime  {
 
 
                 fulltimeList.add(fulltimeVO);
-//                calcRankAndPercent(fulltimeVO);
-//                calcSalaryIncrease(fulltimeVO);
                 System.out.println("검색된 직원 정보: " + fulltimeVO);
             }
 
@@ -260,11 +212,7 @@ public class FulltimeDAO implements Fulltime  {
             disconnect();
         }
 
-
     }
-
-
-
 
     @Override
     public void sort(int sortNum) {
@@ -292,15 +240,12 @@ public class FulltimeDAO implements Fulltime  {
                 fulltimeList.clear(); // 기존 리스트 초기화
             }
 
-
-
             while(rs.next()){
                 FulltimeVO vo = new FulltimeVO();
                 vo.setName(rs.getString("name"));
                 vo.setEmpNo(rs.getString("empNo"));
                 vo.setResult(rs.getInt("result"));
                 vo.setBasicSalary(rs.getInt("basicSalary"));
-
 
                 fulltimeList.add(vo); // DB에서 모든 데이터를 fulltimelist에 먼저 추가 해야함
 
@@ -314,17 +259,12 @@ public class FulltimeDAO implements Fulltime  {
             }
 
 
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             disconnect();
         }
-
-
     }
-
 
 
     @Override
@@ -358,14 +298,11 @@ public class FulltimeDAO implements Fulltime  {
             int resultMsg = cs.getInt(5);
             System.out.println(resultMsg);
 
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             disconnect();
         }
-
 
     };
 }

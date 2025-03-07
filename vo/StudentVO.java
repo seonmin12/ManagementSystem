@@ -1,5 +1,8 @@
 package vo;
 
+import lombok.Data;
+
+@Data
 public class StudentVO {
     /** 이름 */
     private String name;
@@ -19,10 +22,20 @@ public class StudentVO {
     /** 학점 */
     private String grade;
 
-    StudentVO(String name, String sno, int korean, int english, int math, int science) {
+    public StudentVO(String sno, String name, int korean, int english, int math, int science) {
         // input, update시 사용
         // 생성자에서 필요로 하는 필드만 사용하여 DB 생성
         // DB 명은 Fulltime, 각 칼럼명은 필드명과 동일하게
+        this.name = name;
+        this.sno = sno;
+        this.korean = korean;
+        this.english = english;
+        this.math = math;
+        this.science = science;
+
     }
 
+    public StudentVO() {
+
+    }
 }
