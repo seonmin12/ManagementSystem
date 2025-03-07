@@ -3,6 +3,7 @@ package view;
 import controller.Controller;
 import controller.ControllerImpl;
 import vo.FulltimeVO;
+import vo.ParttimeVO;
 import vo.StudentVO;
 
 import java.util.Scanner;
@@ -32,6 +33,8 @@ public class MainMenu {
                     EmployeeSystem();
                     break;
                 case 3 :
+                    ParttimeSystem();
+                case 4 :
                     System.out.println("시스템을 종료합니다.");
                 default :
                     System.out.println("번호를 잘못입력하셨습니다.");
@@ -45,7 +48,7 @@ public class MainMenu {
         System.out.println("\t-       매니지먼트 시스템       -");
         System.out.println("\t------------------------------");
         System.out.println("\t1. 학생관리\t\t2. 직원관리");
-        System.out.println("\t3. 시스템 종료");
+        System.out.println("\t3. 파트타임관리\t4. 시스템 종료");
         System.out.println("\t------------------------------");
         System.out.print("\t입력: ");
     }
@@ -269,6 +272,105 @@ public class MainMenu {
 
         control.search(searchNum);
     }
+
+    void ParttimeSystem() {
+        int choice;
+
+        while (true) {
+            System.out.println();
+            System.out.println("\t------------------------------");
+            System.out.println("\t-       파트타임 관리 시스템       -");
+            System.out.println("\t------------------------------");
+            System.out.println("\t1. 파트타임 입력\t\t2. 파트타임 삭제");
+            System.out.println("\t3. 파트타임 수정\t\t4. 파트타임 명단보기");
+            System.out.println("\t5. 파트타임 검색\t\t6. 종료");
+            System.out.println("\t------------------------------");
+            System.out.print("\t입력: ");
+            choice = scan.nextInt();
+            System.out.println();
+
+            switch (choice) {
+                case 1:
+                    //직원 입력
+                    Pinput();
+                    break;
+                case 2:
+                    //직원 삭제
+                    Pdelete();
+                    break;
+                case 3:
+                    //직원 수정
+                    Pupdate();
+                    break;
+                case 4:
+                    //직원 명단
+                    PtotalSearch();
+                    break;
+                case 5:
+                    //직원 검색
+                    Psearch();
+                    break;
+                case 6:
+                    //직원 종료
+                    exit();
+            }
+        }
+    }
+    void Pinput() {
+        System.out.println("\t------------------------------");
+        System.out.print("\t파트타임 번호: ");
+        String pno = scan.next();
+        System.out.print("\t이름: ");
+        String name = scan.next();
+        System.out.print("\t최저시급: ");
+        int wage = scan.nextInt();
+        System.out.print("\t시간: ");
+        int hour = scan.nextInt();
+        System.out.println("\t------------------------------");
+
+        ParttimeVO parttimeVO = new ParttimeVO(pno, name, wage, hour);
+        control.input(parttimeVO);
+    }
+
+    void Pdelete(){
+        System.out.println("\t------------------------------");
+        System.out.print("\t삭제할 파트타임 번호: ");
+        String deleteNum = scan.next();
+        System.out.println("\t------------------------------");
+
+        control.delete(deleteNum);
+    }
+
+    void Pupdate(){
+        System.out.println("\t------------------------------");
+        System.out.print("\t수정할 파트타임 번호: ");
+        String pno = scan.next();
+        System.out.println("\t------------------------------");
+
+        System.out.print("\t이름: ");
+        String name = scan.next();
+        System.out.print("\t최저시급: ");
+        int wage = scan.nextInt();
+        System.out.print("\t시간: ");
+        int hour = scan.nextInt();
+        System.out.println("\t------------------------------");
+
+        ParttimeVO parttimeVO = new ParttimeVO(name, pno, wage, hour);
+        control.update(parttimeVO);
+    }
+    void PtotalSearch(){
+        control.totalSearch();
+    }
+
+    void Psearch(){
+        System.out.println("\t------------------------------");
+        System.out.print("\t검색할 파트타임 번호: ");
+        String searchNum = scan.next();  // 사용자 입력 받기
+        System.out.println("\t------------------------------");
+
+        control.search(searchNum);
+    }
+
 
     public static void main(String[] args) {
         new MainMenu().managementStart();

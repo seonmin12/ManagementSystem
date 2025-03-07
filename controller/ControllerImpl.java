@@ -4,11 +4,13 @@ import model.Fulltime;
 import model.FulltimeDAO;
 import model.StudentDAO;
 import vo.FulltimeVO;
+import vo.ParttimeVO;
 import vo.StudentVO;
 
 public class ControllerImpl implements Controller {
     private StudentDAO student;
     private FulltimeDAO fulltimeEmp;
+    private ParttimeDAO parttimeEmp;
     private int selectModel = 0;
 
     private static ControllerImpl service;
@@ -37,6 +39,9 @@ public class ControllerImpl implements Controller {
                 this.selectModel = 2;
                 break;
             case 3:
+                this.selectModel = 3;
+                break;
+            case 4:
                 System.exit(0);
                 break;
             default:
@@ -61,6 +66,8 @@ public class ControllerImpl implements Controller {
             student.delete(deleteNum);
         }else if(this.selectModel == 2){
             fulltimeEmp.delete(deleteNum);
+        } else if (this.selectModel == 3) {
+
         }
     }
 
