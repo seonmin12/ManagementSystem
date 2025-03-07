@@ -6,13 +6,13 @@ import vo.StudentVO;
 public interface DBCommon {
 
 
-    void delete(int deleteNum);
+    void delete(String deleteNum);
 
 
 
 
     void totalSearch();
-    void search(int searchNum);
+    void search(String searchNum);
 
 
 
