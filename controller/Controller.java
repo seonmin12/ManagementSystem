@@ -10,14 +10,12 @@ public interface Controller {
 
     void input(StudentVO newStudent);
     void input(FulltimeVO newFulltime);
-
     void input(ParttimeVO parttimeVO);
 
     void delete(String deleteNum);
 
     void update(StudentVO newStudent);
     void update(FulltimeVO newFulltime);
-
     void update(ParttimeVO newParttime);
 
     void totalSearch();

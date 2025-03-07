@@ -279,11 +279,11 @@ public class MainMenu {
         while (true) {
             System.out.println();
             System.out.println("\t------------------------------");
-            System.out.println("\t-       파트타임 관리 시스템       -");
+            System.out.println("\t-       알바 관리 시스템       -");
             System.out.println("\t------------------------------");
-            System.out.println("\t1. 파트타임 입력\t\t2. 파트타임 삭제");
-            System.out.println("\t3. 파트타임 수정\t\t4. 파트타임 명단보기");
-            System.out.println("\t5. 파트타임 검색\t\t6. 종료");
+            System.out.println("\t1. 알바 입력\t\t2. 알바 삭제");
+            System.out.println("\t3. 알바 수정\t\t4. 알바 명단보기");
+            System.out.println("\t5. 알바 검색\t\t6. 종료");
             System.out.println("\t------------------------------");
             System.out.print("\t입력: ");
             choice = scan.nextInt();
@@ -291,27 +291,27 @@ public class MainMenu {
 
             switch (choice) {
                 case 1:
-                    //직원 입력
+                    //알바 입력
                     Pinput();
                     break;
                 case 2:
-                    //직원 삭제
+                    //알바 삭제
                     Pdelete();
                     break;
                 case 3:
-                    //직원 수정
+                    //알바 수정
                     Pupdate();
                     break;
                 case 4:
-                    //직원 명단
+                    //알바 명단
                     PtotalSearch();
                     break;
                 case 5:
-                    //직원 검색
+                    //알바 검색
                     Psearch();
                     break;
                 case 6:
-                    //직원 종료
+                    //알바 종료
                     exit();
             }
         }
@@ -355,7 +355,7 @@ public class MainMenu {
         int hour = scan.nextInt();
         System.out.println("\t------------------------------");
 
-        ParttimeVO parttimeVO = new ParttimeVO(name, pno, wage, hour);
+        ParttimeVO parttimeVO = new ParttimeVO(pno, name, wage, hour);
         control.update(parttimeVO);
     }
     void PtotalSearch(){
