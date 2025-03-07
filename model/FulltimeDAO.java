@@ -93,6 +93,48 @@ public class FulltimeDAO implements Fulltime  {
 
             String resultMsg = cs.getString(5);
             System.out.println(resultMsg);
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            disconnect();
+        }
+
+
+    }
+
+    @Override
+    public void calcincreasesalary(EmployeeVO newEmployee) {
+        FulltimeVO fulltime = new FulltimeVO();
+        if(newEmployee instanceof FulltimeVO){
+            fulltime = (FulltimeVO) newEmployee;
+
+        }else {
+            System.out.println("업데이트 할 직원은 풀타임이 아닙니다.");
+            return;
+
+        }
+        try {
+            conn = DBUtil.getConnection();
+            conn.setAutoCommit(false);
+
+            cs = conn.prepareCall("{call FULLTIME_SALARY_RAISE(?)}");
+
+
+            // out 파라미터에 저장된 프로시저의 수행결과에 대한 외부 변수 등록
+            cs.registerOutParameter(1, java.sql.Types.INTEGER);
+
+            // 쿼리 수행, flag 값은 RS의 경우 true, 갱신, 카운트 또는 결과가 없는 경우 false 리턴
+            boolean flag = cs.execute();
+            System.out.println(flag);
+
+            int resultMsg = cs.getInt(1);
+            System.out.println(resultMsg);
+
+
+
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -210,6 +252,7 @@ public class FulltimeDAO implements Fulltime  {
 
             }
 
+
             // 계산된 전체 리스트 출력
             for (FulltimeVO vo : fulltimeList) {
                 System.out.println(vo);
@@ -222,6 +265,7 @@ public class FulltimeDAO implements Fulltime  {
             disconnect();
         }
     }
+
 
     @Override
     public void input(EmployeeVO newEmployee) {
