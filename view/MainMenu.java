@@ -128,10 +128,10 @@ public class MainMenu {
     }
     void Supdate(){
         System.out.println("\t------------------------------");
-        System.out.print("\t수정할 학번:");
-        String sno = scan.next();
-        System.out.println("\t------------------------------");
         scan.nextLine();
+        System.out.print("\t수정할 학번: ");
+        String sno = scan.nextLine();
+        System.out.println("\t------------------------------");
 
         System.out.print("\t이름 :");
         String nname = scan.nextLine();
@@ -150,14 +150,13 @@ public class MainMenu {
 
     }
     void StotalSearch(){
-        System.out.println("학생명단");
 
         control.totalSearch();
     }
     void SSearch(){
-        System.out.println("학생검색");
+
         System.out.println("\t------------------------------");
-        System.out.print("\t검색할 학번:");
+        System.out.print("\t검색할 학번: ");
         int sno = scan.nextInt();
         System.out.println("\t------------------------------");
 
@@ -165,7 +164,7 @@ public class MainMenu {
 
     }
     void exit(){
-        System.out.println("** 게시판 종료 **");
+        System.out.println("\t** 게시판 종료 **");
         System.exit(0);
     }
 
@@ -218,6 +217,7 @@ public class MainMenu {
 
     void Einput() {
         System.out.println("\t------------------------------");
+        scan.nextLine();
         System.out.print("\t사번: ");
         String empNo = scan.nextLine();
         System.out.print("\t이름: ");
@@ -243,11 +243,12 @@ public class MainMenu {
 
     void EUpdate(){
         System.out.println("\t------------------------------");
-        System.out.print("\t수정할 사번:");
+        scan.nextLine();
+        System.out.print("\t수정할 사번: ");
         String eno = scan.nextLine();
         System.out.println("\t------------------------------");
 
-        System.out.print("\t이름:");
+        System.out.print("\t이름: ");
         String name = scan.nextLine();
         System.out.print("\t실적: ");
         int result = scan.nextInt();
