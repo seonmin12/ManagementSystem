@@ -3,6 +3,7 @@ package model;
 import vo.FulltimeVO;
 import vo.StudentVO;
 
+import java.sql.*;
 import java.util.ArrayList;
 
 public class StudentDAO implements Student {
@@ -18,18 +19,14 @@ public class StudentDAO implements Student {
 
     private ArrayList<StudentVO>studentlist;
 
-    @Override
-    public void input(StudentVO newStudent) {
 
-    }
 
-    @Override
-    public void input(FulltimeVO newFulltime) {
 
-    }
+
 
     @Override
-    public void delete(int deleteNum) {
+    public void delete(String deleteNum) {
+
 
     }
 
@@ -38,10 +35,7 @@ public class StudentDAO implements Student {
 
     }
 
-    @Override
-    public void updqte(FulltimeVO newFulltime) {
 
-    }
 
     @Override
     public void totalSearch() {
@@ -49,14 +43,11 @@ public class StudentDAO implements Student {
     }
 
     @Override
-    public void search(int searchNum) {
+    public void search(String searchNum) {
 
     }
 
-    @Override
-    public void calculate() {
 
-    }
 
     @Override
     public void sort(int sortNum) {
@@ -75,6 +66,10 @@ public class StudentDAO implements Student {
 
     @Override
     public void grade() {
+
+    }
+    @Override
+    public void input(StudentVO newStudent){
 
     }
 }

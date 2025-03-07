@@ -1,8 +1,14 @@
 package model;
 
+import vo.EmployeeVO;
+import vo.FulltimeVO;
+
 public interface Fulltime extends DBCommon{
-    void assignGrade();
-    void calcRankAndPercent();
-    void calcSalaryIncrease();
+//    void assignGrade(FulltimeVO fulltimeVO);
+//    void calcRankAndPercent(FulltimeVO fulltimeVO);
+//    void calcSalaryIncrease(FulltimeVO fulltimeVO);
+    void input(EmployeeVO employeeVO);
+    void update(EmployeeVO employeeVO);
+
 
 }
