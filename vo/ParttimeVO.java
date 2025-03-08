@@ -1,11 +1,15 @@
 package vo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import java.util.Objects;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class ParttimeVO extends EmployeeVO {
+@AllArgsConstructor
+@NoArgsConstructor
+public class ParttimeVO extends EmployeeVO implements Comparable<ParttimeVO>{
 
     private int hourWage; // 시급
     private int workHour; // 노동시간
@@ -15,20 +19,26 @@ public class ParttimeVO extends EmployeeVO {
         super(name,empNo);
         this.hourWage = hourWage;
         this.workHour = workHour;
-
-
-
     }
-    public ParttimeVO(){}
+
+    @Override
+    public boolean equals(Object o) {
+        ParttimeVO that = (ParttimeVO) o;
+        return Objects.equals(getEmpNo(), that.getEmpNo());
+    }
+
+    @Override
+    public int compareTo(ParttimeVO o) {
+        return this.getEmpNo().compareTo(o.getEmpNo());
+    }
 
     @Override
     public String toString() {
-        return "ParttimeVO{" +
-                "이름='" + getName() + '\'' +
-                ", 사번='" + getEmpNo() + '\'' +
-                ", 시급=" + hourWage +
-                ", 노동시간=" + workHour +
-                ", 임금=" + wage +
-                '}';
+        return "\t이름: " + getName() +
+                "\t사번: " + getEmpNo() +
+                "\t시급: " + hourWage +
+                "\t노동시간: " + workHour +
+                "\t임금: " + wage;
     }
+
 }

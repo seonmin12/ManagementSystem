@@ -34,6 +34,7 @@ public class MainMenu {
                     break;
                 case 3 :
                     ParttimeSystem();
+                    break;
                 case 4 :
                     System.out.println("시스템을 종료합니다.");
                 default :
@@ -48,14 +49,13 @@ public class MainMenu {
         System.out.println("\t-       매니지먼트 시스템       -");
         System.out.println("\t------------------------------");
         System.out.println("\t1. 학생관리\t\t2. 직원관리");
-        System.out.println("\t3. 파트타임관리\t4. 시스템 종료");
+        System.out.println("\t3. 알바관리\t\t4. 시스템 종료");
         System.out.println("\t------------------------------");
         System.out.print("\t입력: ");
     }
     void StudentSystem() {
 
         int choice;
-
 
         while (true) {
             showStudentMenu();
@@ -153,8 +153,14 @@ public class MainMenu {
 
     }
     void StotalSearch(){
+        System.out.println("\t------------------------------");
+        System.out.println("\t1. 이름순\t\t2. 학번순");
+        System.out.println("\t3. 성적순");
+        System.out.print("\t정렬 선택: ");
+        int sortNum = scan.nextInt();
+        System.out.println("\t------------------------------\n");
 
-        control.totalSearch();
+        control.totalSearch(sortNum);
     }
     void Ssearch(){
 
@@ -260,8 +266,16 @@ public class MainMenu {
         FulltimeVO fulltimeVO = new FulltimeVO(name, eno, result, basicSalary);
         control.update(fulltimeVO);
     }
+
     void EtotalSearch(){
-        control.totalSearch();
+        System.out.println("\t------------------------------");
+        System.out.println("\t1. 이름순\t\t2. 사번순");
+        System.out.println("\t3. 실적순");
+        System.out.print("\t정렬 선택: ");
+        int sortNum = scan.nextInt();
+        System.out.println("\t------------------------------\n");
+
+        control.totalSearch(sortNum);
     }
 
     void Esearch(){
@@ -318,7 +332,7 @@ public class MainMenu {
     }
     void Pinput() {
         System.out.println("\t------------------------------");
-        System.out.print("\t파트타임 번호: ");
+        System.out.print("\t알바 번호: ");
         String pno = scan.next();
         System.out.print("\t이름: ");
         String name = scan.next();
@@ -334,7 +348,7 @@ public class MainMenu {
 
     void Pdelete(){
         System.out.println("\t------------------------------");
-        System.out.print("\t삭제할 파트타임 번호: ");
+        System.out.print("\t삭제할 알바 번호: ");
         String deleteNum = scan.next();
         System.out.println("\t------------------------------");
 
@@ -343,7 +357,7 @@ public class MainMenu {
 
     void Pupdate(){
         System.out.println("\t------------------------------");
-        System.out.print("\t수정할 파트타임 번호: ");
+        System.out.print("\t수정할 알바 번호: ");
         String pno = scan.next();
         System.out.println("\t------------------------------");
 
@@ -358,13 +372,21 @@ public class MainMenu {
         ParttimeVO parttimeVO = new ParttimeVO(pno, name, wage, hour);
         control.update(parttimeVO);
     }
+
     void PtotalSearch(){
-        control.totalSearch();
+        System.out.println("\t------------------------------");
+        System.out.println("\t1. 이름순\t\t2. 사번순");
+        System.out.println("\t3. 일한시간순");
+        System.out.print("\t정렬 선택: ");
+        int sortNum = scan.nextInt();
+        System.out.println("\t------------------------------\n");
+
+        control.totalSearch(sortNum);
     }
 
     void Psearch(){
         System.out.println("\t------------------------------");
-        System.out.print("\t검색할 파트타임 번호: ");
+        System.out.print("\t검색할 알바 번호: ");
         String searchNum = scan.next();  // 사용자 입력 받기
         System.out.println("\t------------------------------");
 

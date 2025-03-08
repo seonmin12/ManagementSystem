@@ -1,19 +1,18 @@
 package vo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-
-public abstract class EmployeeVO {
-    private String name;
+@AllArgsConstructor
+@NoArgsConstructor
+public abstract class EmployeeVO extends PersonVO {
     private String empNo;
 
-    public EmployeeVO(){}
-
     public EmployeeVO(String name, String empNo) {
-        this.name = name;
+        super(name);
         this.empNo = empNo;
     }
-
 
 }
