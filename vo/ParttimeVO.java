@@ -10,7 +10,6 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ParttimeVO extends EmployeeVO implements Comparable<ParttimeVO>{
-
     private int hourWage; // 시급
     private int workHour; // 노동시간
     private int wage; // 임금
@@ -40,5 +39,4 @@ public class ParttimeVO extends EmployeeVO implements Comparable<ParttimeVO>{
                 "\t노동시간: " + workHour +
                 "\t임금: " + wage;
     }
-
 }

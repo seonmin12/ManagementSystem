@@ -13,8 +13,6 @@ import java.util.Comparator;
 public class StudentDAO implements Student {
     private static StudentDAO dao;
 
-
-
     private StudentDAO() {}
 
     public static StudentDAO getInstance() {
@@ -88,158 +86,58 @@ public class StudentDAO implements Student {
         }
     }
 
-    @Override
-    public void update(PersonVO personVO)  {
-
-        StudentVO newStudent = (StudentVO) personVO;
-        if(studentlist.size() == 0) this.connect();
-
+    private void connect() {
         try {
-
             conn = DBUtil.getConnection();
-            cs = conn.prepareCall("{call STUDENT_UPDATE(?,?,?,?,?,?,?)}");
+            String sql = " select * from student ";
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
 
-            cs.setString(1, newStudent.getSno());
-            cs.setString(2, newStudent.getName());
-            cs.setInt(3, newStudent.getKorean());
-            cs.setInt(4, newStudent.getEnglish());
-            cs.setInt(5, newStudent.getMath());
-            cs.setInt(6, newStudent.getScience());
-            cs.execute();
+            while (rs.next()) {
+                StudentVO studentVO = new StudentVO();
 
-            int rtn = cs.getInt(7);
-            String resultString = null;
-            if (rtn == 100) {
-                System.out.println("DB 수정 실패");
-            } else {
-                // 총점, 평균, 학점 계산
-                int total = newStudent.getKorean() + newStudent.getEnglish() + newStudent.getMath() + newStudent.getScience();
-                newStudent.setTotal(total);
-                float average = total / 4.0f;
-                newStudent.setAverage(average);
+                studentVO.setSno(rs.getString("sno"));
+                studentVO.setName(rs.getString("name"));
+                studentVO.setKorean(rs.getInt("korean"));
+                studentVO.setEnglish(rs.getInt("english"));
+                studentVO.setMath(rs.getInt("math"));
+                studentVO.setScience(rs.getInt("science"));
 
-                String grade;
-                if (average >= 90) {
-                    grade = "A";
-                } else if (average >= 80) {
-                    grade = "B";
-                } else if (average >= 70) {
-                    grade = "C";
-                } else if (average >= 60) {
-                    grade = "D";
-                } else {
-                    grade = "F";
-                }
-                newStudent.setGrade(grade);
-                studentlist.set(studentlist.indexOf(newStudent),newStudent);
-                System.out.println("DB 수정 성공");
+                if (studentVO.getKorean() < 0) studentVO.setKorean(0);
+                else if (studentVO.getKorean() > 100) studentVO.setKorean(100);
+                if (studentVO.getEnglish() < 0) studentVO.setEnglish(0);
+                else if (studentVO.getEnglish() > 100) studentVO.setEnglish(100);
+                if (studentVO.getMath() < 0) studentVO.setMath(0);
+                else if (studentVO.getMath() > 100) studentVO.setMath(100);
+                if (studentVO.getScience() < 0) studentVO.setScience(0);
+                else if (studentVO.getScience() > 100) studentVO.setScience(100);
+
+                // 합계, 평균, 등급 계산
+                this.total(studentVO);
+                this.average(studentVO);
+                this.grade(studentVO);
+
+                // 리스트에 추가
+                studentlist.add(studentVO);
             }
-
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             disConnect();
         }
     }
 
-    @Override
-    public void delete(String deleteNum) {
-        if (studentlist.size() == 0) this.connect();
-        try {
-
-            conn = DBUtil.getConnection();
-            cs = conn.prepareCall("{call STUDENT_DELETE(?,?)}");
-
-            cs.setString(1, deleteNum);
-            cs.registerOutParameter(2, Types.INTEGER);
-            cs.execute();
-
-            int rtn = cs.getInt(2);
-
-            if (rtn == 100) {
-                System.out.println("DB 삭제 실패");
-            } else {
-                studentlist.remove(studentlist.indexOf(new StudentVO(deleteNum,null,0,0,0,0)
-                ));
-
-                System.out.println("DB 삭제 성공");
-            }
-
-        }catch (SQLException e){
-            e.printStackTrace();
-        }finally {
-            disConnect();
-        }
-
-    }
 
     @Override
-    public void totalSearch(int sortNum) {
-        if (studentlist.size() == 0) this.connect();
-
-        switch(sortNum){
-            case 1:
-                this.sort(1);
-                break;
-
-                case 2:
-                this.sort(2);
-                break;
-
-                case 3:
-                    this.sort(3);
-                    break;
-        }
-
-        studentlist.forEach(System.out::println);
-
-
-    }
-
-    @Override
-    public void search(String searchNum) {
-
-        if(studentlist.size() == 0) this.connect();
-
-        StudentVO temp = studentlist.get(studentlist.indexOf(new StudentVO(searchNum,null,0,0,0,0)
-        ));
-        System.out.println(temp);
-
-
-    }
-
-
-
-    @Override
-    public void sort(int sortNum) {
-
-        switch(sortNum){
-            case 1:
-                studentlist.sort(Comparator.comparing(StudentVO ::getName));
-                break;
-
-            case 2:
-                studentlist.sort((o1, o2) -> o1.compareTo(o2));
-                break;
-
-            case 3:
-                studentlist.sort(Comparator.comparing(StudentVO ::getGrade));
-                break;
-        }
-
-    }
-
-    @Override
-    public void input(PersonVO personVO)  {
+    public void input(PersonVO personVO) {
 
         StudentVO newStudent = (StudentVO) personVO;
+        if(studentlist.size() == 0) this.connect();
 
-        //  studentList가 비어있으면 DB에서 데이터 읽어오기
+        //  studentlist가 비어있으면 DB에서 데이터 읽어오기
         if (studentlist.size() == 0) {
             this.connect();
         }
-
-
 
         try {
             conn = DBUtil.getConnection();
@@ -256,40 +154,197 @@ public class StudentDAO implements Student {
             cs.registerOutParameter(7, Types.INTEGER);
             cs.execute();
 
-            int rtn = cs.getInt(7);
-            String resultString = null;
-            if (rtn == 100) {
-                System.out.println("DB 입력 실패");
+            int resultMsg = cs.getInt(7);
+            if (resultMsg == 100) {
+                System.out.println("디비 입력 실패");
             } else {
-                // 총점, 평균, 학점 계산
-                int total = newStudent.getKorean() + newStudent.getEnglish() + newStudent.getMath() + newStudent.getScience();
-                newStudent.setTotal(total);
-                float average = total / 4.0f;
-                newStudent.setAverage(average);
+                if (newStudent.getKorean() < 0) newStudent.setKorean(0);
+                else if (newStudent.getKorean() > 100) newStudent.setKorean(100);
+                if (newStudent.getEnglish() < 0) newStudent.setEnglish(0);
+                else if (newStudent.getEnglish() > 100) newStudent.setEnglish(100);
+                if (newStudent.getMath() < 0) newStudent.setMath(0);
+                else if (newStudent.getMath() > 100) newStudent.setMath(100);
+                if (newStudent.getScience() < 0) newStudent.setScience(0);
+                else if (newStudent.getScience() > 100) newStudent.setScience(100);
 
-                String grade;
-                if (average >= 90) {
-                    grade = "A";
-                } else if (average >= 80) {
-                    grade = "B";
-                } else if (average >= 70) {
-                    grade = "C";
-                } else if (average >= 60) {
-                    grade = "D";
-                } else {
-                    grade = "F";
-                }
-                newStudent.setGrade(grade);
+                // 합계, 평균, 등급 계산
+                this.total(newStudent);
+                this.average(newStudent);
+                this.grade(newStudent);
+
+                // 리스트에 추가
                 studentlist.add(newStudent);
-                System.out.println("DB 입력 성공");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            disConnect();
+        }
+    }
+
+    @Override
+    public void update(PersonVO personVO) {
+
+        StudentVO newStudent = (StudentVO) personVO;
+
+        //  studentlist가 비어있으면 DB에서 데이터 읽어오기
+        if (studentlist.size() == 0) {
+            this.connect();
+        }
+
+        try {
+
+            conn = DBUtil.getConnection();
+
+            cs = conn.prepareCall("{call STUDENT_UPDATE(?,?,?,?,?,?,?)}");
+
+            cs.setString(1, newStudent.getSno());
+            cs.setString(2, newStudent.getName());
+            cs.setInt(3, newStudent.getKorean());
+            cs.setInt(4, newStudent.getEnglish());
+            cs.setInt(5, newStudent.getMath());
+            cs.setInt(6, newStudent.getScience());
+
+            cs.registerOutParameter(7, Types.INTEGER);
+            cs.execute();
+
+            int resultMsg = cs.getInt(7);
+            if (resultMsg == 100) {
+                System.out.println("디비 수정 실패");
+            } else {
+                if (newStudent.getKorean() < 0) newStudent.setKorean(0);
+                else if (newStudent.getKorean() > 100) newStudent.setKorean(100);
+                if (newStudent.getEnglish() < 0) newStudent.setEnglish(0);
+                else if (newStudent.getEnglish() > 100) newStudent.setEnglish(100);
+                if (newStudent.getMath() < 0) newStudent.setMath(0);
+                else if (newStudent.getMath() > 100) newStudent.setMath(100);
+                if (newStudent.getScience() < 0) newStudent.setScience(0);
+                else if (newStudent.getScience() > 100) newStudent.setScience(100);
+
+                // 합계, 평균, 등급 계산
+                this.total(newStudent);
+                this.average(newStudent);
+                this.grade(newStudent);
+
+                // 리스트에서 수정
+                studentlist.set(studentlist.indexOf(newStudent), newStudent);
             }
 
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
+            disConnect();
+        }
+    }
+
+    @Override
+    public void delete(String deleteNum) {
+        //  studentlist가 비어있으면 DB에서 데이터 읽어오기
+        if (studentlist.size() == 0) {
+            this.connect();
+        }
+
+        try {
+            conn = DBUtil.getConnection();
+
+            cs = conn.prepareCall("{call STUDENT_DELETE(?,?)}");
+
+            cs.setString(1, deleteNum);
+
+            cs.registerOutParameter(2, Types.INTEGER);
+            cs.execute();
+
+            int resultMsg = cs.getInt(2);
+            if (resultMsg == 100) {
+                System.out.println("디비 삭제 실패");
+            } else {
+                studentlist.remove(studentlist.indexOf(
+                        new StudentVO(deleteNum, null, 0, 0, 0, 0)
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
             disConnect();
         }
 
+        studentlist.forEach(System.out::println);
+
+
+    }
+
+    public void totalSearch(int sortNum) {
+        //  studentlist가 비어있으면 DB에서 데이터 읽어오기
+        if (studentlist.size() == 0) {
+            this.connect();
+        }
+
+        // 리스트의 내용을 sortNum 으로 정렬
+        this.sort(sortNum);
+      
+        // 리스트의 내용을 출력
+        studentlist.forEach(System.out::println);
+    }
+
+    @Override
+    public void search(String searchNum) {
+        //  studentlist가 비어있으면 DB에서 데이터 읽어오기
+        if (studentlist.size() == 0) {
+            this.connect();
+        }
+
+        StudentVO temp = studentlist.get(studentlist.indexOf(
+                new StudentVO(searchNum, null, 0, 0, 0, 0)
+        ));
+        System.out.println(temp);
+    }
+
+
+    @Override
+    public void sort(int sortNum) {
+        switch (sortNum) {
+            case 1: // 이름순
+                studentlist.sort(Comparator.comparing(StudentVO::getName));
+                break;
+            case 2: // 사번순
+                studentlist.sort((o1, o2) -> o1.compareTo(o2));
+                break;
+            case 3: // 일한시간순
+                studentlist.sort(Comparator.comparing(StudentVO::getTotal).reversed());
+                break;
+            case 4:
+                break;
+        }
+    }
+
+    public void total(StudentVO studentVO){
+        int total = studentVO.getKorean()
+                    + studentVO.getEnglish()
+                    + studentVO.getMath()
+                    + studentVO.getScience();
+        studentVO.setTotal(total);
+    }
+
+    @Override
+    public void average(StudentVO studentVO){
+        float average = studentVO.getTotal() / 4.0f;
+        studentVO.setAverage(average);
+    }
+
+    @Override
+    public void grade(StudentVO studentVO){
+        String grade;
+        if (studentVO.getAverage() >= 90) {
+            grade = "A";
+        } else if (studentVO.getAverage() >= 80) {
+            grade = "B";
+        } else if (studentVO.getAverage() >= 70) {
+            grade = "C";
+        } else if (studentVO.getAverage() >= 60) {
+            grade = "D";
+        } else {
+            grade = "F";
+        }
+        studentVO.setGrade(grade);
     }
 }
-
