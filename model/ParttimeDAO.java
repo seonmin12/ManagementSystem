@@ -154,6 +154,11 @@ public class ParttimeDAO implements Parttime{
                 else if (wage>Integer.MAX_VALUE) wage = Integer.MAX_VALUE;
                 parttime.setWage(wage);
 
+                if (parttime.getHourWage() < 10030) parttime.setHourWage(10030);
+                else if (parttime.getHourWage() > 100000000) parttime.setHourWage(100000000);
+                if (parttime.getWorkHour() < 0) parttime.setWorkHour(0);
+                else if (parttime.getWorkHour() > 100000000) parttime.setWorkHour(100000000);
+
                 parttimeList.set(parttimeList.indexOf(parttime), parttime);
             }
 

@@ -63,6 +63,15 @@ public class StudentDAO implements Student {
                 studentVO.setMath(rs.getInt("math"));
                 studentVO.setScience(rs.getInt("science"));
 
+                if (studentVO.getKorean() < 0) studentVO.setKorean(0);
+                else if (studentVO.getKorean() > 100) studentVO.setKorean(100);
+                if (studentVO.getEnglish() < 0) studentVO.setEnglish(0);
+                else if (studentVO.getEnglish() > 100) studentVO.setEnglish(100);
+                if (studentVO.getMath() < 0) studentVO.setMath(0);
+                else if (studentVO.getMath() > 100) studentVO.setMath(100);
+                if (studentVO.getScience() < 0) studentVO.setScience(0);
+                else if (studentVO.getScience() > 100) studentVO.setScience(100);
+
                 // 합계, 평균, 등급 계산
                 this.total(studentVO);
                 this.average(studentVO);
@@ -108,7 +117,6 @@ public class StudentDAO implements Student {
             if (resultMsg == 100) {
                 System.out.println("디비 입력 실패");
             } else {
-                // 합계, 평균, 등급 계산
                 if (newStudent.getKorean() < 0) newStudent.setKorean(0);
                 else if (newStudent.getKorean() > 100) newStudent.setKorean(100);
                 if (newStudent.getEnglish() < 0) newStudent.setEnglish(0);
@@ -118,6 +126,7 @@ public class StudentDAO implements Student {
                 if (newStudent.getScience() < 0) newStudent.setScience(0);
                 else if (newStudent.getScience() > 100) newStudent.setScience(100);
 
+                // 합계, 평균, 등급 계산
                 this.total(newStudent);
                 this.average(newStudent);
                 this.grade(newStudent);
@@ -165,6 +174,15 @@ public class StudentDAO implements Student {
             if (resultMsg == 100) {
                 System.out.println("디비 수정 실패");
             } else {
+                if (newStudent.getKorean() < 0) newStudent.setKorean(0);
+                else if (newStudent.getKorean() > 100) newStudent.setKorean(100);
+                if (newStudent.getEnglish() < 0) newStudent.setEnglish(0);
+                else if (newStudent.getEnglish() > 100) newStudent.setEnglish(100);
+                if (newStudent.getMath() < 0) newStudent.setMath(0);
+                else if (newStudent.getMath() > 100) newStudent.setMath(100);
+                if (newStudent.getScience() < 0) newStudent.setScience(0);
+                else if (newStudent.getScience() > 100) newStudent.setScience(100);
+
                 // 합계, 평균, 등급 계산
                 this.total(newStudent);
                 this.average(newStudent);
