@@ -5,6 +5,7 @@ import vo.*;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class FulltimeDAO implements Fulltime  {
 
@@ -19,14 +20,12 @@ public class FulltimeDAO implements Fulltime  {
     }
 
     private ArrayList<FulltimeVO> fulltimeList = new ArrayList<>();
-  
     private Connection conn;
     private PreparedStatement pstmt;
     private Statement stmt;
     private ResultSet rs;
     private CallableStatement cs;
 
-    // 사용한 자원 반납하는 메소드
     private void disconnect(){
         if (rs != null) try {rs.close();} catch (SQLException e) {}
         if (stmt != null) try {stmt.close();} catch (SQLException e) {}
@@ -63,6 +62,9 @@ public class FulltimeDAO implements Fulltime  {
 
     @Override
     public void delete(String deleteNum) {
+        //fulltimeList가 비어있으면 DB에서 데이터 읽어오기
+        if(fulltimeList.size() == 0) this.connect();
+
         try {
             conn = DBUtil.getConnection();
             conn.setAutoCommit(false);
@@ -72,11 +74,17 @@ public class FulltimeDAO implements Fulltime  {
             cs.setString(1, deleteNum);
             cs.registerOutParameter(2,java.sql.Types.INTEGER);
 
-            boolean flag = cs.execute();
-            System.out.println(flag);
+           cs.execute();
+           int resultMsg = cs.getInt(2);
 
-            String resultMsg = cs.getString(2);
-            System.out.println(resultMsg);
+           if(resultMsg == 100){
+               System.out.println("DB 삭제 실패");
+           }else{
+               fulltimeList.remove(fulltimeList.indexOf(
+                       new FulltimeVO(deleteNum, null, 0, 0)
+               ));
+               System.out.println("DB 삭제 성공");
+           }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -88,6 +96,8 @@ public class FulltimeDAO implements Fulltime  {
     public void update(PersonVO personVO) {
 
         FulltimeVO fulltime = (FulltimeVO) personVO;
+
+        if(fulltimeList.size() == 0) this.connect();
 
         try {
             conn = DBUtil.getConnection();
@@ -106,11 +116,16 @@ public class FulltimeDAO implements Fulltime  {
             cs.registerOutParameter(5, java.sql.Types.INTEGER);
 
             // 쿼리 수행, flag 값은 RS의 경우 true, 갱신, 카운트 또는 결과가 없는 경우 false 리턴
-            boolean flag = cs.execute();
-            System.out.println(flag);
+            cs.execute();
 
-            String resultMsg = cs.getString(5);
-            System.out.println(resultMsg);
+            int resultMsg = cs.getInt(5);
+            if(resultMsg == 100){
+                System.out.println("DB 수정 실패");
+            }else{
+                fulltimeList.set(fulltimeList.indexOf(fulltime), fulltime);
+                System.out.println("DB 수정 성공");
+
+            }
 
 
         } catch (SQLException e) {
@@ -124,6 +139,7 @@ public class FulltimeDAO implements Fulltime  {
 
     @Override
     public void calcincreasesalary() {
+
         try {
             conn = DBUtil.getConnection();
             conn.setAutoCommit(false);
@@ -134,12 +150,33 @@ public class FulltimeDAO implements Fulltime  {
             // out 파라미터에 저장된 프로시저의 수행결과에 대한 외부 변수 등록
             cs.registerOutParameter(1, java.sql.Types.INTEGER);
 
-            // 쿼리 수행, flag 값은 RS의 경우 true, 갱신, 카운트 또는 결과가 없는 경우 false 리턴
-            boolean flag = cs.execute();
-            System.out.println(flag);
+            cs.execute();
 
             int resultMsg = cs.getInt(1);
-            System.out.println(resultMsg);
+            if(resultMsg == 100){
+                System.out.println("월급 인상 실패");
+            }else{
+                conn.commit(); // 인상된 월급 커밋
+                System.out.println("월급 인상 성공");
+            }
+
+            // 변경된 월급 정보를 조회하기 전, 기존 리스트 초기화
+            fulltimeList.clear();
+
+            // 변경된 월급 정보를 조회하기 위한 SELECT 쿼리 실행
+            String sql = "SELECT name, empNo, result,basicSalary FROM Fulltime";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            // 결과셋을 FulltimeVO 객체로 변환하여 리스트에 추가
+            while (rs.next()) {
+                FulltimeVO fulltime = new FulltimeVO();
+                fulltime.setName(rs.getString("name"));
+                fulltime.setEmpNo(rs.getString("empNo"));
+                fulltime.setResult(rs.getInt("result"));
+                fulltime.setBasicSalary(rs.getInt("basicSalary"));//
+                fulltimeList.add(fulltime);
+            }
 
 
 
@@ -153,125 +190,64 @@ public class FulltimeDAO implements Fulltime  {
 
     @Override
     public void totalSearch(int sortNum) {
+        if(fulltimeList.size() == 0) this.connect();
 
-        try {
-            conn = DBUtil.getConnection();
-            String sql = "select * from Fulltime ";
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery(sql);
-            fulltimeList = new ArrayList<>();
+        switch (sortNum){
+            case 1:
+                this.sort(1);// 이름순
+                break;
 
-            //  fulltimeList가 null이면 새로 생성, 이미 있으면 초기화
-            if (fulltimeList == null) {
-                fulltimeList = new ArrayList<>();
-            } else {
-                fulltimeList.clear(); // 기존 데이터 유지하면서 내용만 삭제
-            }
+            case 2:
+                this.sort(2); // 사번순
+                break;
 
-            while(rs.next()){
-                FulltimeVO fulltime = new FulltimeVO();
-                fulltime.setName(rs.getString("name"));
-                fulltime.setEmpNo(rs.getString("empNo"));
-                fulltime.setResult(rs.getInt("result"));
-                fulltime.setBasicSalary(rs.getInt("basicSalary"));
-                fulltimeList.add(fulltime);
-            }
-
-            // 출력
-            for (FulltimeVO fulltimeVO : fulltimeList) {
-                System.out.println(fulltimeVO);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            disconnect();
+            case 3:
+                this.sort(3); // 실적순
+                break;
         }
+
+        // 리스트 출력
+        fulltimeList.forEach(System.out::println);
+
 
     }
 
 
     @Override
     public void search(String searchNum) {
-        try {
-            fulltimeList = new ArrayList<>();
-            conn = DBUtil.getConnection();
-            String sql = "select * from Fulltime where empNo = ?";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, searchNum);
-
-            rs = pstmt.executeQuery();
+        //fulltimeList가 비어있으면 DB에서 데이터 가져오기
+        if (fulltimeList.size() == 0) this.connect();
 
 
-            while(rs.next()){
-                FulltimeVO fulltimeVO = new FulltimeVO();
-                fulltimeVO.setName(rs.getString("name"));
-                fulltimeVO.setEmpNo(rs.getString("empNo"));
-                fulltimeVO.setResult(rs.getInt("result"));
-                fulltimeVO.setBasicSalary(rs.getInt("basicSalary"));
+        FulltimeVO temp = fulltimeList.get(fulltimeList.indexOf(
+                new FulltimeVO(searchNum, null, 0, 0)
+        ));
+
+        System.out.println(temp);
 
 
-                fulltimeList.add(fulltimeVO);
-                System.out.println("검색된 직원 정보: " + fulltimeVO);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            disconnect();
-        }
 
     }
 
+
+
+
+
+
     @Override
     public void sort(int sortNum) {
-        try {
-            conn = DBUtil.getConnection();
-            String sql = "";
-            switch (sortNum) {
-                case 1: sql = "select * from Fulltime order by empNo ";
+        switch(sortNum){
+            case 1:// 이름순
+                fulltimeList.sort(Comparator.comparing(FulltimeVO::getName));
                 break;
-                case 2: sql = "select * from Fulltime order by name  ";
+
+            case 2: // 사번순
+                fulltimeList.sort( (o1, o2) -> o1.compareTo(o2));
                 break;
-                case 3: sql = "select * from Fulltime order by result desc  ";
+
+            case 3: // 실적순
+                fulltimeList.sort(Comparator.comparing(FulltimeVO::getResult).reversed());
                 break;
-                default:
-                    System.out.println("잘못 입력했습니다.");
-                    return;
-            }
-            pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-
-            // fulltimeList가 null이면 초기화
-            if (fulltimeList == null) {
-                fulltimeList = new ArrayList<>();
-            } else {
-                fulltimeList.clear(); // 기존 리스트 초기화
-            }
-
-            while(rs.next()){
-                FulltimeVO vo = new FulltimeVO();
-                vo.setName(rs.getString("name"));
-                vo.setEmpNo(rs.getString("empNo"));
-                vo.setResult(rs.getInt("result"));
-                vo.setBasicSalary(rs.getInt("basicSalary"));
-
-                fulltimeList.add(vo); // DB에서 모든 데이터를 fulltimelist에 먼저 추가 해야함
-
-
-            }
-
-
-            // 계산된 전체 리스트 출력
-            for (FulltimeVO vo : fulltimeList) {
-                System.out.println(vo);
-            }
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            disconnect();
         }
     }
 
@@ -280,6 +256,10 @@ public class FulltimeDAO implements Fulltime  {
     public void input(PersonVO personVO) {
 
         FulltimeVO fulltime = (FulltimeVO) personVO;
+
+        if (fulltimeList.size() == 0) {
+            this.connect();
+        }
 
         try {
             conn = DBUtil.getConnection();
@@ -293,12 +273,16 @@ public class FulltimeDAO implements Fulltime  {
             cs.setInt(4, fulltime.getBasicSalary());
 
             cs.registerOutParameter(5, java.sql.Types.INTEGER);
-
-            boolean flag = cs.execute();
-            System.out.println(flag);
+            cs.execute();
 
             int resultMsg = cs.getInt(5);
-            System.out.println(resultMsg);
+            if(resultMsg == 100){
+                System.out.println("DB 입력 실패");
+            }else {
+                fulltimeList.add(fulltime);
+                System.out.println("DB 입력 성공");
+
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();

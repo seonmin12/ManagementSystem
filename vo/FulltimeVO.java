@@ -15,7 +15,7 @@ public class FulltimeVO extends EmployeeVO implements Comparable<FulltimeVO>{
     private int basicSalary; // 월급
 
 
-    public FulltimeVO(String name, String empNo, int result, int basicSalary){
+    public FulltimeVO(String empNo, String name, int result, int basicSalary){
       super(name, empNo);
       this.result = result;
       this.basicSalary = basicSalary;
@@ -23,6 +23,9 @@ public class FulltimeVO extends EmployeeVO implements Comparable<FulltimeVO>{
 
     @Override
     public boolean equals(Object o) {
+        // FulltimeVO 타입 체크, 객체 자기 자신과 비교
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
         FulltimeVO that = (FulltimeVO) o;
         return Objects.equals(getEmpNo(), that.getEmpNo());
     }
