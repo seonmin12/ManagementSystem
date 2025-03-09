@@ -109,6 +109,15 @@ public class StudentDAO implements Student {
                 System.out.println("디비 입력 실패");
             } else {
                 // 합계, 평균, 등급 계산
+                if (newStudent.getKorean() < 0) newStudent.setKorean(0);
+                else if (newStudent.getKorean() > 100) newStudent.setKorean(100);
+                if (newStudent.getEnglish() < 0) newStudent.setEnglish(0);
+                else if (newStudent.getEnglish() > 100) newStudent.setEnglish(100);
+                if (newStudent.getMath() < 0) newStudent.setMath(0);
+                else if (newStudent.getMath() > 100) newStudent.setMath(100);
+                if (newStudent.getScience() < 0) newStudent.setScience(0);
+                else if (newStudent.getScience() > 100) newStudent.setScience(100);
+
                 this.total(newStudent);
                 this.average(newStudent);
                 this.grade(newStudent);
@@ -147,11 +156,12 @@ public class StudentDAO implements Student {
             cs.setInt(3, newStudent.getKorean());
             cs.setInt(4, newStudent.getEnglish());
             cs.setInt(5, newStudent.getMath());
-
             cs.setInt(6, newStudent.getScience());
+
+            cs.registerOutParameter(7, Types.INTEGER);
             cs.execute();
 
-            int resultMsg = cs.getInt(6);
+            int resultMsg = cs.getInt(7);
             if (resultMsg == 100) {
                 System.out.println("디비 수정 실패");
             } else {
@@ -160,8 +170,8 @@ public class StudentDAO implements Student {
                 this.average(newStudent);
                 this.grade(newStudent);
 
-                // 리스트에 추가
-                studentlist.add(newStudent);
+                // 리스트에서 수정
+                studentlist.set(studentlist.indexOf(newStudent), newStudent);
             }
 
         } catch (SQLException e) {
@@ -258,8 +268,8 @@ public class StudentDAO implements Student {
         }
     }
 
-
-    private void total(StudentVO studentVO){
+    @Override
+    public void total(StudentVO studentVO){
         int total = studentVO.getKorean()
                     + studentVO.getEnglish()
                     + studentVO.getMath()
@@ -267,13 +277,14 @@ public class StudentDAO implements Student {
         studentVO.setTotal(total);
     }
 
-
-    private void average(StudentVO studentVO){
+    @Override
+    public void average(StudentVO studentVO){
         float average = studentVO.getTotal() / 4.0f;
         studentVO.setAverage(average);
     }
 
-    private void grade(StudentVO studentVO){
+    @Override
+    public void grade(StudentVO studentVO){
         String grade;
         if (studentVO.getAverage() >= 90) {
             grade = "A";

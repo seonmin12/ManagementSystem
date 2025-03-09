@@ -53,6 +53,8 @@ public class ParttimeDAO implements Parttime{
 
                 // 임금 계산
                 int wage = parttime.getHourWage() * parttime.getWorkHour();
+                if (wage<0) wage = 0;
+                else if (wage>Integer.MAX_VALUE) wage = Integer.MAX_VALUE;
                 parttime.setWage(wage);
 
                 // 임시 parttime 객체 리스트에 저장
@@ -95,7 +97,14 @@ public class ParttimeDAO implements Parttime{
             } else {
                 // 임금 계산
                 int wage = parttime.getHourWage() * parttime.getWorkHour();
+                if (wage<0) wage = 0;
+                else if (wage>Integer.MAX_VALUE) wage = Integer.MAX_VALUE;
                 parttime.setWage(wage);
+
+                if (parttime.getHourWage() < 10030) parttime.setHourWage(10030);
+                else if (parttime.getHourWage() > 100000000) parttime.setHourWage(100000000);
+                if (parttime.getWorkHour() < 0) parttime.setWorkHour(0);
+                else if (parttime.getWorkHour() > 100000000) parttime.setWorkHour(100000000);
 
                 parttimeList.add(parttime);
             }
@@ -141,6 +150,8 @@ public class ParttimeDAO implements Parttime{
             } else {
                 // 임금 계산
                 int wage = parttime.getHourWage() * parttime.getWorkHour();
+                if (wage<0) wage = 0;
+                else if (wage>Integer.MAX_VALUE) wage = Integer.MAX_VALUE;
                 parttime.setWage(wage);
 
                 parttimeList.set(parttimeList.indexOf(parttime), parttime);

@@ -1,7 +1,9 @@
 package model;
 
+import vo.StudentVO;
+
 public interface Student extends DBCommon {
-    private void total();
-    private void avg();
-    private void grade();
+    void total(StudentVO studentVO);
+    void average(StudentVO studentVO);
+    void grade(StudentVO studentVO);
 }
