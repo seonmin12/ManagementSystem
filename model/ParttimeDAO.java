@@ -212,19 +212,8 @@ public class ParttimeDAO implements Parttime{
         //  parttimeList가 비어있으면 DB에서 데이터 읽어오기
         if (parttimeList.size() == 0) this.connect();
 
-
         // 리스트의 내용을 sortNum 으로 정렬
-        switch(sortNum){
-            case 1:
-                this.sort(1); //이름순
-                break;
-            case 2:
-                this.sort(2);// 사번순
-                break;
-            case 3:
-                this.sort(3); // 노동시간순
-                break;
-        }
+        this.sort(sortNum);
 
         // 리스트의 내용을 출력
         parttimeList.forEach(System.out::println);

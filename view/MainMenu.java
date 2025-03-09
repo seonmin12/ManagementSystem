@@ -37,6 +37,7 @@ public class MainMenu {
                     break;
                 case 4 :
                     System.out.println("시스템을 종료합니다.");
+                    break;
                 default :
                     System.out.println("번호를 잘못입력하셨습니다.");
             }
@@ -160,6 +161,11 @@ public class MainMenu {
         int sortNum = scan.nextInt();
         System.out.println("\t------------------------------\n");
 
+        String str = "\t%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-10s%-5s\n";
+        System.out.printf(
+                String.format(str, "학번", "이름", "국어", "영어", "수학", "과학", "합계", "평균", "등급")
+        );
+        System.out.println("\t------------------------------------------------------------------------------------------------");
         control.totalSearch(sortNum);
     }
     void Ssearch(){
@@ -275,6 +281,11 @@ public class MainMenu {
         int sortNum = scan.nextInt();
         System.out.println("\t------------------------------\n");
 
+        String str = "\t%-12s%-12s%-12s%-12s\n";
+        System.out.printf(
+                String.format(str, "사번", "이름", "실적", "월급")
+        );
+        System.out.println("\t------------------------------------------------");
         control.totalSearch(sortNum);
     }
 
@@ -381,6 +392,11 @@ public class MainMenu {
         int sortNum = scan.nextInt();
         System.out.println("\t------------------------------\n");
 
+        String str = "\t%-10s%-10s%-13s%-13s%-12s\n";
+        System.out.printf(
+                String.format(str, "사번", "이름", "시급", "일한시간", "지급액")
+        );
+        System.out.println("\t--------------------------------------------------------------------");
         control.totalSearch(sortNum);
     }
 

@@ -37,10 +37,8 @@ public class FulltimeVO extends EmployeeVO implements Comparable<FulltimeVO>{
 
     @Override
     public String toString() {
-        return "\t이름: " + getName() +
-                "\t사번: " + getEmpNo() +
-                "\t실적: " + result +
-                "\t월급: " + basicSalary;
+        String str = "\t%-13s%-14s%-13s%-20s";
+        return String.format(str, getEmpNo(), getName(), result, basicSalary);
     }
 
 }

@@ -28,62 +28,11 @@ public class StudentDAO implements Student {
     private ResultSet rs;
     private CallableStatement cs;
 
-
     private void disConnect() {
         if (rs != null) try {rs.close();} catch (SQLException e) {}
         if (stmt != null) try {stmt.close();} catch (SQLException e) {}
         if (pstmt != null) try {pstmt.close();} catch (SQLException e) {}
         if (conn != null) try {conn.close();} catch (SQLException e) {}
-    }
-
-    private void connect() {
-        try{
-            conn = DBUtil.getConnection();
-            String sql = "select * from Student ";
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery(sql);
-
-            while(rs.next()){
-                // 임시 parttime 객체 생성
-                StudentVO student = new StudentVO();
-
-                // rs에서 임시 parttime 객체로 데이터 읽어오기
-                student.setName(rs.getString("name"));
-                student.setSno(rs.getString("sno"));
-                student.setKorean(rs.getInt("korean"));
-                student.setMath(rs.getInt("math"));
-                student.setEnglish(rs.getInt("english"));
-                student.setScience(rs.getInt("science"));
-
-                // 총점, 평균, 학점 계산
-                int total = student.getKorean() + student.getEnglish() + student.getMath() + student.getScience();
-                student.setTotal(total);
-                float average = total / 4.0f;
-                student.setAverage(average);
-
-                String grade;
-                if (average >= 90) {
-                    grade = "A";
-                } else if (average >= 80) {
-                    grade = "B";
-                } else if (average >= 70) {
-                    grade = "C";
-                } else if (average >= 60) {
-                    grade = "D";
-                } else {
-                    grade = "F";
-                }
-                student.setGrade(grade);
-
-
-                // 임시 parttime 객체 리스트에 저장
-                studentlist.add(student);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            disConnect();
-        }
     }
 
     private void connect() {

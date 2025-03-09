@@ -80,12 +80,8 @@ public class ControllerImpl implements Controller {
             case 4:
                 System.exit(0);
                 break;
-            default:
-                System.out.println("\t잘못된 입력입니다. 1, 2, 3 중 하나를 선택하세요.");
-                break;
         }
     }
-
 
     @Override
     public void input(PersonVO personVO) {
@@ -136,7 +132,7 @@ public class ControllerImpl implements Controller {
             student.totalSearch(sortNum);
         } else if (this.selectModel == 2) {
             fulltimeEmp.totalSearch(sortNum);
-            System.out.print("\t------------------------------\n" +
+            System.out.print("\t------------------------------------------------\n" +
                     "\t전체 직원의 월급을 인상하시겠습니까? (y/n) : ");
             if (new Scanner(System.in).next().equals("y")){
                 fulltimeEmp.calcincreasesalary();

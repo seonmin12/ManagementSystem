@@ -83,7 +83,6 @@ public class FulltimeDAO implements Fulltime  {
                fulltimeList.remove(fulltimeList.indexOf(
                        new FulltimeVO(deleteNum, null, 0, 0)
                ));
-               System.out.println("DB 삭제 성공");
            }
 
         } catch (SQLException e) {
@@ -123,29 +122,22 @@ public class FulltimeDAO implements Fulltime  {
                 System.out.println("DB 수정 실패");
             }else{
                 fulltimeList.set(fulltimeList.indexOf(fulltime), fulltime);
-                System.out.println("DB 수정 성공");
-
             }
-
 
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             disconnect();
         }
-
-
     }
 
     @Override
     public void calcincreasesalary() {
-
         try {
             conn = DBUtil.getConnection();
             conn.setAutoCommit(false);
 
             cs = conn.prepareCall("{call FULLTIME_SALARY_RAISE(?)}");
-
 
             // out 파라미터에 저장된 프로시저의 수행결과에 대한 외부 변수 등록
             cs.registerOutParameter(1, java.sql.Types.INTEGER);
@@ -157,7 +149,6 @@ public class FulltimeDAO implements Fulltime  {
                 System.out.println("월급 인상 실패");
             }else{
                 conn.commit(); // 인상된 월급 커밋
-                System.out.println("월급 인상 성공");
             }
 
             // 변경된 월급 정보를 조회하기 전, 기존 리스트 초기화
@@ -178,9 +169,6 @@ public class FulltimeDAO implements Fulltime  {
                 fulltimeList.add(fulltime);
             }
 
-
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -192,24 +180,11 @@ public class FulltimeDAO implements Fulltime  {
     public void totalSearch(int sortNum) {
         if(fulltimeList.size() == 0) this.connect();
 
-        switch (sortNum){
-            case 1:
-                this.sort(1);// 이름순
-                break;
-
-            case 2:
-                this.sort(2); // 사번순
-                break;
-
-            case 3:
-                this.sort(3); // 실적순
-                break;
-        }
+        // 리스트의 내용을 sortNum 으로 정렬
+        this.sort(sortNum);
 
         // 리스트 출력
         fulltimeList.forEach(System.out::println);
-
-
     }
 
 
@@ -218,21 +193,12 @@ public class FulltimeDAO implements Fulltime  {
         //fulltimeList가 비어있으면 DB에서 데이터 가져오기
         if (fulltimeList.size() == 0) this.connect();
 
-
         FulltimeVO temp = fulltimeList.get(fulltimeList.indexOf(
                 new FulltimeVO(searchNum, null, 0, 0)
         ));
 
         System.out.println(temp);
-
-
-
     }
-
-
-
-
-
 
     @Override
     public void sort(int sortNum) {
@@ -250,7 +216,6 @@ public class FulltimeDAO implements Fulltime  {
                 break;
         }
     }
-
 
     @Override
     public void input(PersonVO personVO) {
@@ -280,8 +245,6 @@ public class FulltimeDAO implements Fulltime  {
                 System.out.println("DB 입력 실패");
             }else {
                 fulltimeList.add(fulltime);
-                System.out.println("DB 입력 성공");
-
             }
 
         } catch (SQLException e) {
@@ -289,6 +252,5 @@ public class FulltimeDAO implements Fulltime  {
         } finally {
             disconnect();
         }
-
     };
 }

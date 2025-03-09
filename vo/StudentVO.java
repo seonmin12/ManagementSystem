@@ -49,14 +49,7 @@ public class StudentVO extends PersonVO implements Comparable<StudentVO>{
 
     @Override
     public String toString() {
-        return "\t이름: " + getName() +
-                "\t학번: " + sno +
-                "\t국어: " + korean +
-                "\t영어: " + english +
-                "\t수학: " + math +
-                "\t과학: " + science +
-                "\t총점: " + total +
-                "\t평균: " + average +
-                "\t학점: " + grade;
+        String str = "\t%-12s%-11s%-11d%-11d%-11d%-11d%-11d%-12.1f%-8s";
+        return String.format(str, sno, getName(), korean, english, math, science, total, average, grade);
     }
 }
