@@ -1,10 +1,7 @@
 package model;
 
 import util.DBUtil;
-import vo.EmployeeVO;
-import vo.FulltimeVO;
-import vo.ParttimeVO;
-import vo.StudentVO;
+import vo.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -21,7 +18,7 @@ public class FulltimeDAO implements Fulltime  {
         return dao;
     }
 
-    private ArrayList<FulltimeVO> fulltimeList;
+    private ArrayList<FulltimeVO> fulltimeList = new ArrayList<>();
   
     private Connection conn;
     private PreparedStatement pstmt;
@@ -35,6 +32,33 @@ public class FulltimeDAO implements Fulltime  {
         if (stmt != null) try {stmt.close();} catch (SQLException e) {}
         if (pstmt != null) try {pstmt.close();} catch (SQLException e) {}
         if (conn != null) try {conn.close();} catch (SQLException e) {}
+    }
+
+    private void connect() {
+        try{
+            conn = DBUtil.getConnection();
+            String sql = "select * from Fulltime ";
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+
+            while(rs.next()){
+                // 임시 fulltime 객체 생성
+                FulltimeVO fulltime = new FulltimeVO();
+
+                // rs에서 임시 fulltime 객체로 데이터 읽어오기
+                fulltime.setName(rs.getString("name"));
+                fulltime.setEmpNo(rs.getString("empNo"));
+                fulltime.setResult(rs.getInt("result"));
+                fulltime.setBasicSalary(rs.getInt("basicSalary"));
+
+                // 임시 parttime 객체 리스트에 저장
+                fulltimeList.add(fulltime);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            disconnect();
+        }
     }
 
     @Override
@@ -61,16 +85,10 @@ public class FulltimeDAO implements Fulltime  {
 
 
     @Override
-    public void update(EmployeeVO newEmployee) {
-        FulltimeVO fulltime = new FulltimeVO();
-        if(newEmployee instanceof FulltimeVO){
-            fulltime = (FulltimeVO) newEmployee;
+    public void update(PersonVO personVO) {
 
-        }else {
-            System.out.println("업데이트 할 직원은 풀타임이 아닙니다.");
-            return;
+        FulltimeVO fulltime = (FulltimeVO) personVO;
 
-        }
         try {
             conn = DBUtil.getConnection();
             conn.setAutoCommit(false);
@@ -134,7 +152,7 @@ public class FulltimeDAO implements Fulltime  {
     }
 
     @Override
-    public void totalSearch() {
+    public void totalSearch(int sortNum) {
 
         try {
             conn = DBUtil.getConnection();
@@ -259,16 +277,9 @@ public class FulltimeDAO implements Fulltime  {
 
 
     @Override
-    public void input(EmployeeVO newEmployee) {
-        FulltimeVO fulltime = null;
-        if(newEmployee instanceof FulltimeVO){
-            fulltime = (FulltimeVO) newEmployee;
+    public void input(PersonVO personVO) {
 
-        }else {
-            System.out.println("업데이트 할 직원은 풀타임이 아닙니다.");
-            return;
-
-        }
+        FulltimeVO fulltime = (FulltimeVO) personVO;
 
         try {
             conn = DBUtil.getConnection();

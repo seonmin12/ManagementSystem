@@ -1,17 +1,20 @@
 package model;
 
 import util.DBUtil;
+import vo.FulltimeVO;
+import vo.ParttimeVO;
+import vo.PersonVO;
 import vo.StudentVO;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class StudentDAO implements Student {
     private static StudentDAO dao;
 
-    private ArrayList<StudentVO> studentlist;
-
-    private StudentDAO() {}
+    private StudentDAO() {
+    }
 
     public static StudentDAO getInstance() {
         if (dao == null) dao = new StudentDAO();
@@ -19,15 +22,16 @@ public class StudentDAO implements Student {
         return dao;
     }
 
+    private ArrayList<StudentVO> studentlist = new ArrayList<>();
     private Connection conn;
     private PreparedStatement pstmt;
     private ResultSet rs;
-    private CallableStatement cs = null;
+    private CallableStatement cs;
 
 
     private void disConnect() {
         if (rs != null) try {
-                rs.close();
+            rs.close();
         } catch (SQLException e) {
         }
 
@@ -42,86 +46,16 @@ public class StudentDAO implements Student {
         }
     }
 
-
-
-
-    @Override
-    public void update(StudentVO newStudent)  {
+    private void connect() {
         try {
-
-            conn = DBUtil.getConnection();
-            cs = conn.prepareCall("{call STUDENT_UPDATE(?,?,?,?,?,?,?)}");
-
-            cs.setString(1, newStudent.getSno());
-            cs.setString(2, newStudent.getName());
-            cs.setInt(3, newStudent.getKorean());
-            cs.setInt(4, newStudent.getEnglish());
-            cs.setInt(5, newStudent.getMath());
-            cs.setInt(6, newStudent.getScience());
-            cs.execute();
-
-            int rtn = cs.getInt(7);
-            String resultString = null;
-            if (rtn == 100) {
-                resultString = "수정 실패";
-                System.out.println(resultString);
-            } else {
-                resultString = "수정 성공";
-                System.out.println(resultString);
-            }
-
-            if (cs != null) cs.close();
-            if (conn != null) cs.close();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }finally {
-            disConnect();
-        }
-    }
-
-    @Override
-    public void delete(String deleteNum) {
-        try {
-
-            conn = DBUtil.getConnection();
-            cs = conn.prepareCall("{call STUDENT_DELETE(?,?)}");
-
-            cs.setString(1, deleteNum);
-            cs.registerOutParameter(2, Types.INTEGER);
-            cs.execute();
-
-            int rtn = cs.getInt(2);
-            String resultString = null;
-            if (rtn == 100) {
-                resultString = "회원 정보 없음";
-                System.out.println(resultString);
-            } else {
-                resultString = "삭제 성공";
-                System.out.println(resultString);
-            }
-
-            if (cs != null) cs.close();
-            if (conn != null) conn.close();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }finally {
-            disConnect();
-        }
-
-    }
-
-    @Override
-    public void totalSearch() {
-
-        System.out.println("학번 이름 ");
-        try {
-            StudentVO studentVO = new StudentVO();
-            studentlist = new ArrayList<>();
             conn = DBUtil.getConnection();
             String sql = " select * from student ";
             pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
+
             while (rs.next()) {
+                StudentVO studentVO = new StudentVO();
+
                 studentVO.setSno(rs.getString("sno"));
                 studentVO.setName(rs.getString("name"));
                 studentVO.setKorean(rs.getInt("korean"));
@@ -129,165 +63,13 @@ public class StudentDAO implements Student {
                 studentVO.setMath(rs.getInt("math"));
                 studentVO.setScience(rs.getInt("science"));
 
-                // 총점과 평균 계산
-                int total = studentVO.getKorean() + studentVO.getEnglish() + studentVO.getMath() + studentVO.getScience();
-                float average = total / 4.0f;
-                studentVO.setTotal(total);
-                studentVO.setAverage(average);
+                // 합계, 평균, 등급 계산
+                this.total(studentVO);
+                this.average(studentVO);
+                this.grade(studentVO);
 
-                // 등급 설정
-                String grade;
-                if (average >= 90) {
-                    grade = "A";
-                } else if (average >= 80) {
-                    grade = "B";
-                } else if (average >= 70) {
-                    grade = "C";
-                } else if (average >= 60) {
-                    grade = "D";
-                } else {
-                    grade = "F";
-                }
-                studentVO.setGrade(grade);
+                // 리스트에 추가
                 studentlist.add(studentVO);
-                System.out.println(studentVO);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            disConnect();
-        }
-    }
-
-    @Override
-    public void search(String searchNum) {
-        try {
-            studentlist = new ArrayList<>();
-            conn = DBUtil.getConnection();
-            String sql = " select * from student where sno = ? ";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, searchNum);
-            rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                StudentVO studentVO = new StudentVO();
-                studentVO.setSno(rs.getString("sno"));
-                studentVO.setName(rs.getString("name"));
-                studentVO.setKorean(rs.getInt("korean"));
-                studentVO.setEnglish(rs.getInt("english"));
-                studentVO.setMath(rs.getInt("math"));
-                studentVO.setScience(rs.getInt("science"));
-
-                studentlist.add(studentVO);
-                System.out.println(studentVO);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-
-
-    }
-
-
-
-    @Override
-    public void sort(int sortNum) {
-        try {
-            conn = DBUtil.getConnection();
-            String sql = "";
-
-            switch (sortNum) {
-                case 1:
-                    sql = " select * from student order by sno ";
-                    break;
-                case 2:
-                    sql = " select * from student order by name "; // 이름순
-                    break;
-                case 3:
-                    sql = " select * from student order by (korean+english+math+science)"; // 총점순
-                    break;
-                default:
-                    System.out.println("잘못눌렀습니다.");
-                    return;
-            }
-            pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                int sno = rs.getInt("sno");
-                String name = rs.getString("name");
-                int korean = rs.getInt("korean");
-                int english = rs.getInt("english");
-                int math = rs.getInt("math");
-                int science = rs.getInt("science");
-                int total = korean + english + math + science;
-
-                System.out.println("학번: " + sno + ", 이름: " + name + ", 총점: " + total);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            disConnect();
-        }
-    }
-
-    @Override
-    public void total() {
-        try{
-            studentlist = new ArrayList<>();
-            conn = DBUtil.getConnection();
-            String sql = " select * from student ";
-
-            pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                // StudentVO 객체에 데이터 저장
-                StudentVO studentVO = new StudentVO();
-                studentVO.setSno(rs.getString("sno"));  // 학번
-                studentVO.setName(rs.getString("name"));  // 이름
-                studentVO.setKorean(rs.getInt("korean"));  // 국어 점수
-                studentVO.setEnglish(rs.getInt("english"));  // 영어 점수
-                studentVO.setMath(rs.getInt("math"));  // 수학 점수
-                studentVO.setScience(rs.getInt("science"));  // 과학 점수
-
-                int total = studentVO.getKorean() + studentVO.getEnglish() + studentVO.getMath() + studentVO.getScience();
-                studentVO.setTotal(total);
-                System.out.println(studentVO);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            disConnect();
-        }
-    }
-
-
-
-    @Override
-    public void avg() {
-
-
-        try {
-            conn = DBUtil.getConnection();
-            String sql = " select * from student ";
-            pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-
-
-            while (rs.next()) {
-                StudentVO studentVOavg = new StudentVO();
-                String sno = rs.getString("sno");
-                String name = rs.getString("name");
-                int korean = rs.getInt("korean");
-                int english = rs.getInt("english");
-                int math = rs.getInt("math");
-                int science = rs.getInt("science");
-                float avg = (korean + english + math + science) / 4.0f;
-                studentVOavg.setAverage(avg);
-                System.out.println("학번: " + sno + ", 이름: " + name + ", 국어: " + korean + ", 영어: " + english + ", 수학: " + math + ", " +
-                        "과학: " + science + ", 평균: " + avg);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -298,55 +80,20 @@ public class StudentDAO implements Student {
 
 
     @Override
-    public void grade() {
+    public void input(PersonVO personVO) {
 
-        try {
-            conn = DBUtil.getConnection();
-            String sql = " select * from student ";
+        StudentVO newStudent = (StudentVO) personVO;
 
-            pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                String sno = rs.getString("sno");
-                String name = rs.getString("name");
-                int korean = rs.getInt("korean");
-                int english = rs.getInt("english");
-                int math = rs.getInt("math");
-                int science = rs.getInt("science");
-
-                float avarage = (korean + english + math + science) / 4;
-                String grade;
-
-                if (avarage >= 90) {
-                    grade = "A";
-                } else if (avarage >= 80) {
-                    grade = "B";
-                } else if (avarage >= 70) {
-                    grade = "C";
-                } else if (avarage >= 60) {
-                    grade = "D";
-                } else {
-                    grade = "F";
-                }
-                System.out.println("학번: " + sno + ", 이름: " + name + ", 등급: " + grade);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            disConnect();
+        //  studentlist가 비어있으면 DB에서 데이터 읽어오기
+        if (studentlist.size() == 0) {
+            this.connect();
         }
-    }
 
-
-
-    @Override
-    public void input(StudentVO newStudent)  {
         try {
             conn = DBUtil.getConnection();
 
             cs = conn.prepareCall("{call STUDENT_INSERT(?,?,?,?,?,?,?)}");
-            System.out.println(newStudent.getName());
+
             cs.setString(1, newStudent.getSno());
             cs.setString(2, newStudent.getName());
             cs.setInt(3, newStudent.getKorean());
@@ -357,29 +104,188 @@ public class StudentDAO implements Student {
             cs.registerOutParameter(7, Types.INTEGER);
             cs.execute();
 
-            int rtn = cs.getInt(7);
-            String resultString = null;
-            if (rtn == 100) {
-                resultString = "입력실패";
-                System.out.println(resultString);
+            int resultMsg = cs.getInt(7);
+            if (resultMsg == 100) {
+                System.out.println("디비 입력 실패");
             } else {
-                resultString = "입력성공";
-                System.out.println(resultString);
+                // 합계, 평균, 등급 계산
+                this.total(newStudent);
+                this.average(newStudent);
+                this.grade(newStudent);
+
+                // 리스트에 추가
+                studentlist.add(newStudent);
             }
-            if (cs != null) cs.close();
-            if (conn != null) conn.close();
-        }catch (SQLException e){
+
+        } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             disConnect();
         }
 
     }
 
-    public static void main(String[] args) {
-        getInstance().totalSearch();
+
+    @Override
+    public void update(PersonVO personVO) {
+
+        StudentVO newStudent = (StudentVO) personVO;
+
+        //  studentlist가 비어있으면 DB에서 데이터 읽어오기
+        if (studentlist.size() == 0) {
+            this.connect();
+        }
+
+        try {
+
+            conn = DBUtil.getConnection();
+
+            cs = conn.prepareCall("{call STUDENT_UPDATE(?,?,?,?,?,?,?)}");
+
+            cs.setString(1, newStudent.getSno());
+            cs.setString(2, newStudent.getName());
+            cs.setInt(3, newStudent.getKorean());
+            cs.setInt(4, newStudent.getEnglish());
+            cs.setInt(5, newStudent.getMath());
+
+            cs.setInt(6, newStudent.getScience());
+            cs.execute();
+
+            int resultMsg = cs.getInt(6);
+            if (resultMsg == 100) {
+                System.out.println("디비 수정 실패");
+            } else {
+                // 합계, 평균, 등급 계산
+                this.total(newStudent);
+                this.average(newStudent);
+                this.grade(newStudent);
+
+                // 리스트에 추가
+                studentlist.add(newStudent);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            disConnect();
+        }
+    }
+
+    @Override
+    public void delete(String deleteNum) {
+        //  studentlist가 비어있으면 DB에서 데이터 읽어오기
+        if (studentlist.size() == 0) {
+            this.connect();
+        }
+
+        try {
+            conn = DBUtil.getConnection();
+
+            cs = conn.prepareCall("{call STUDENT_DELETE(?,?)}");
+
+            cs.setString(1, deleteNum);
+
+            cs.registerOutParameter(2, Types.INTEGER);
+            cs.execute();
+
+            int resultMsg = cs.getInt(2);
+            if (resultMsg == 100) {
+                System.out.println("디비 삭제 실패");
+            } else {
+                studentlist.remove(studentlist.indexOf(
+                        new StudentVO(deleteNum, null, 0, 0, 0, 0)
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            disConnect();
+        }
+    }
+
+    @Override
+    public void totalSearch(int sortNum) {
+        //  studentlist가 비어있으면 DB에서 데이터 읽어오기
+        if (studentlist.size() == 0) {
+            this.connect();
+        }
+
+        // 리스트의 내용을 sortNum 으로 정렬
+        switch(sortNum){
+            case 1:
+                this.sort(1); //이름순
+                break;
+            case 2:
+                this.sort(2);// 사번순
+                break;
+            case 3:
+                this.sort(3); // 실적순
+                break;
+        }
+
+        // 리스트의 내용을 출력
+        studentlist.forEach(System.out::println);
+    }
+
+    @Override
+    public void search(String searchNum) {
+        //  studentlist가 비어있으면 DB에서 데이터 읽어오기
+        if (studentlist.size() == 0) {
+            this.connect();
+        }
+
+        StudentVO temp = studentlist.get(studentlist.indexOf(
+                new StudentVO(searchNum, null, 0, 0, 0, 0)
+        ));
+        System.out.println(temp);
     }
 
 
-}
+    @Override
+    public void sort(int sortNum) {
+        switch (sortNum) {
+            case 1: // 이름순
+                studentlist.sort(Comparator.comparing(StudentVO::getName));
+                break;
+            case 2: // 사번순
+                studentlist.sort((o1, o2) -> o1.compareTo(o2));
+                break;
+            case 3: // 일한시간순
+                studentlist.sort(Comparator.comparing(StudentVO::getTotal).reversed());
+                break;
+            case 4:
+                break;
+        }
+    }
 
+
+    private void total(StudentVO studentVO){
+        int total = studentVO.getKorean()
+                    + studentVO.getEnglish()
+                    + studentVO.getMath()
+                    + studentVO.getScience();
+        studentVO.setTotal(total);
+    }
+
+
+    private void average(StudentVO studentVO){
+        float average = studentVO.getTotal() / 4.0f;
+        studentVO.setAverage(average);
+    }
+
+    private void grade(StudentVO studentVO){
+        String grade;
+        if (studentVO.getAverage() >= 90) {
+            grade = "A";
+        } else if (studentVO.getAverage() >= 80) {
+            grade = "B";
+        } else if (studentVO.getAverage() >= 70) {
+            grade = "C";
+        } else if (studentVO.getAverage() >= 60) {
+            grade = "D";
+        } else {
+            grade = "F";
+        }
+        studentVO.setGrade(grade);
+    }
+}

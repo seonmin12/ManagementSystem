@@ -1,12 +1,12 @@
 package model;
 
-import vo.FulltimeVO;
-import vo.ParttimeVO;
-import vo.StudentVO;
+import vo.PersonVO;
 
 public interface DBCommon {
+    void input(PersonVO personVO);
     void delete(String deleteNum);
-    void totalSearch();
+    void update(PersonVO personVO);
+    void totalSearch(int sortNum);
     void search(String searchNum);
     void sort(int sortNum);
 }

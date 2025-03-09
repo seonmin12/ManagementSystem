@@ -1,24 +1,12 @@
 package controller;
 
-import model.Fulltime;
-import vo.FulltimeVO;
-import vo.ParttimeVO;
-import vo.StudentVO;
+import vo.PersonVO;
 
 public interface Controller {
     void choice(int choiceNum);
-
-    void input(StudentVO newStudent);
-    void input(FulltimeVO newFulltime);
-    void input(ParttimeVO parttimeVO);
-
+    void input(PersonVO personVO);
     void delete(String deleteNum);
-
-    void update(StudentVO newStudent);
-    void update(FulltimeVO newFulltime);
-    void update(ParttimeVO newParttime);
-
-    void totalSearch();
+    void update(PersonVO newPerson);
+    void totalSearch(int sortNum);
     void search(String searchNum);
-
 }
