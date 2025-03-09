@@ -91,7 +91,7 @@ public class ParttimeDAO implements Parttime{
 
             int resultMsg = cs.getInt(5);
             if (resultMsg == 100) {
-                System.out.println("디비 입력 실패");
+                System.out.println("DB 입력 실패");
             } else {
                 // 임금 계산
                 int wage = parttime.getHourWage() * parttime.getWorkHour();
@@ -133,11 +133,11 @@ public class ParttimeDAO implements Parttime{
             cs.registerOutParameter(5, java.sql.Types.INTEGER);
 
             // 쿼리 수행, flag 값은 RS의 경우 true, 갱신, 카운트 또는 결과가 없는 경우 false 리턴
-            boolean flag = cs.execute();
+            cs.execute();
             int resultMsg = cs.getInt(5);
 
             if (resultMsg == 100) {
-                System.out.println("디비 수정 실패");
+                System.out.println("DB 수정 실패");
             } else {
                 // 임금 계산
                 int wage = parttime.getHourWage() * parttime.getWorkHour();
@@ -155,10 +155,9 @@ public class ParttimeDAO implements Parttime{
 
     @Override
     public void delete(String deleteNum) {
-        //  fulltimeList가 비어있으면 DB에서 데이터 읽어오기
-        if (parttimeList.size() == 0) {
-            this.connect();
-        }
+        //  parttimeList가 비어있으면 DB에서 데이터 읽어오기
+        if (parttimeList.size() == 0) this.connect();
+
 
         try {
             conn = DBUtil.getConnection();
@@ -169,11 +168,11 @@ public class ParttimeDAO implements Parttime{
             cs.setString(1, deleteNum);
             cs.registerOutParameter(2,java.sql.Types.INTEGER);
 
-            boolean flag = cs.execute();
+            cs.execute();
             int resultMsg = cs.getInt(2);
 
             if (resultMsg == 100) {
-                System.out.println("디비 삭제 실패");
+                System.out.println("DB 삭제 실패");
             } else {
                 parttimeList.remove(parttimeList.indexOf(
                         new ParttimeVO(deleteNum, null, 0, 0)
@@ -188,10 +187,9 @@ public class ParttimeDAO implements Parttime{
 
     @Override
     public void totalSearch(int sortNum) {
-        //  fulltimeList가 비어있으면 DB에서 데이터 읽어오기
-        if (parttimeList.size() == 0) {
-            this.connect();
-        }
+        //  parttimeList가 비어있으면 DB에서 데이터 읽어오기
+        if (parttimeList.size() == 0) this.connect();
+
 
         // 리스트의 내용을 sortNum 으로 정렬
         switch(sortNum){
@@ -202,7 +200,7 @@ public class ParttimeDAO implements Parttime{
                 this.sort(2);// 사번순
                 break;
             case 3:
-                this.sort(3); // 실적순
+                this.sort(3); // 노동시간순
                 break;
         }
 
@@ -212,7 +210,7 @@ public class ParttimeDAO implements Parttime{
 
     @Override
     public void search(String searchNum) {
-        //  fulltimeList가 비어있으면 DB에서 데이터 읽어오기
+        //  parttimeList가 비어있으면 DB에서 데이터 읽어오기
         if (parttimeList.size() == 0) {
             this.connect();
         }

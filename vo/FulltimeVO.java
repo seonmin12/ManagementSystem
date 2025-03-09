@@ -23,6 +23,9 @@ public class FulltimeVO extends EmployeeVO implements Comparable<FulltimeVO>{
 
     @Override
     public boolean equals(Object o) {
+        // FulltimeVO 타입 체크, 객체 자기 자신과 비교
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
         FulltimeVO that = (FulltimeVO) o;
         return Objects.equals(getEmpNo(), that.getEmpNo());
     }
