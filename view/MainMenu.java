@@ -392,7 +392,7 @@ public class MainMenu {
         int sortNum = scan.nextInt();
         System.out.println("\t------------------------------\n");
 
-        String str = "\t%-10s%-10s%-13s%-13s%-12s\n";
+        String str = "\t%-10s%-11s%-13s%-13s%-12s\n";
         System.out.printf(
                 String.format(str, "사번", "이름", "시급", "일한시간", "지급액")
         );

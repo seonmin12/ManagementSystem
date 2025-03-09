@@ -33,7 +33,7 @@ public class ParttimeVO extends EmployeeVO implements Comparable<ParttimeVO>{
 
     @Override
     public String toString() {
-        String str = "\t%-11s%-10s%-15d%-15d%-15d";
+        String str = "\t%-12s%-12s%-14d%-15d%-15d";
         return String.format(str, getEmpNo(), getName(), hourWage, workHour, wage);
     }
 }
