@@ -192,7 +192,6 @@ public class StudentDAO implements Student {
         if (studentlist.size() == 0) {
             this.connect();
         }
-
         try {
             conn = DBUtil.getConnection();
 
@@ -216,10 +215,6 @@ public class StudentDAO implements Student {
         } finally {
             disConnect();
         }
-
-        studentlist.forEach(System.out::println);
-
-
     }
 
     public void totalSearch(int sortNum) {
@@ -247,7 +242,6 @@ public class StudentDAO implements Student {
         ));
         System.out.println(temp);
     }
-
 
     @Override
     public void sort(int sortNum) {
