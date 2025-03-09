@@ -14,5 +14,4 @@ public abstract class EmployeeVO extends PersonVO {
         super(name);
         this.empNo = empNo;
     }
-
 }
