@@ -83,6 +83,7 @@ public class FulltimeDAO implements Fulltime  {
                fulltimeList.remove(fulltimeList.indexOf(
                        new FulltimeVO(deleteNum, null, 0, 0)
                ));
+               System.out.println("DB 삭제 성공");
            }
 
         } catch (SQLException e) {
@@ -122,6 +123,7 @@ public class FulltimeDAO implements Fulltime  {
                 System.out.println("DB 수정 실패");
             }else{
                 fulltimeList.set(fulltimeList.indexOf(fulltime), fulltime);
+                System.out.println("DB 수정 성공");
 
             }
 
@@ -155,13 +157,14 @@ public class FulltimeDAO implements Fulltime  {
                 System.out.println("월급 인상 실패");
             }else{
                 conn.commit(); // 인상된 월급 커밋
+                System.out.println("월급 인상 성공");
             }
 
             // 변경된 월급 정보를 조회하기 전, 기존 리스트 초기화
             fulltimeList.clear();
 
             // 변경된 월급 정보를 조회하기 위한 SELECT 쿼리 실행
-            String sql = "SELECT name, empNo, result,basicSalary FROM Fulltime";  // 테이블명과 컬럼명은 실제 DB 스키마에 맞게 수정하세요.
+            String sql = "SELECT name, empNo, result,basicSalary FROM Fulltime";
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
@@ -222,7 +225,11 @@ public class FulltimeDAO implements Fulltime  {
 
         System.out.println(temp);
 
+
+
     }
+
+
 
 
 
@@ -273,7 +280,7 @@ public class FulltimeDAO implements Fulltime  {
                 System.out.println("DB 입력 실패");
             }else {
                 fulltimeList.add(fulltime);
-                System.out.println("입력 성공");
+                System.out.println("DB 입력 성공");
 
             }
 

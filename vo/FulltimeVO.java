@@ -15,7 +15,7 @@ public class FulltimeVO extends EmployeeVO implements Comparable<FulltimeVO>{
     private int basicSalary; // 월급
 
 
-    public FulltimeVO(String name, String empNo, int result, int basicSalary){
+    public FulltimeVO(String empNo, String name, int result, int basicSalary){
       super(name, empNo);
       this.result = result;
       this.basicSalary = basicSalary;

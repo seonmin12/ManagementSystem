@@ -236,7 +236,7 @@ public class MainMenu {
         int salary = scan.nextInt();
         System.out.println("\t------------------------------");
 
-        FulltimeVO fulltimeVO = new FulltimeVO(name, empNo, result, salary);
+        FulltimeVO fulltimeVO = new FulltimeVO(empNo, name, result, salary);
         control.input(fulltimeVO);
     }
 
@@ -252,7 +252,7 @@ public class MainMenu {
     void Eupdate(){
         System.out.println("\t------------------------------");
         System.out.print("\t수정할 사번: ");
-        String eno = scan.next();
+        String empNo = scan.next();
         System.out.println("\t------------------------------");
 
         System.out.print("\t이름: ");
@@ -263,7 +263,7 @@ public class MainMenu {
         int basicSalary = scan.nextInt();
         System.out.println("\t------------------------------");
 
-        FulltimeVO fulltimeVO = new FulltimeVO(name, eno, result, basicSalary);
+        FulltimeVO fulltimeVO = new FulltimeVO(empNo, name, result, basicSalary);
         control.update(fulltimeVO);
     }
 
@@ -396,6 +396,7 @@ public class MainMenu {
 
     public static void main(String[] args) {
         new MainMenu().managementStart();
+
     }
 
 }

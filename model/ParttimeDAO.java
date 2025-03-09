@@ -98,6 +98,7 @@ public class ParttimeDAO implements Parttime{
                 parttime.setWage(wage);
 
                 parttimeList.add(parttime);
+                System.out.println("DB 입력 성공");
             }
 
         } catch (SQLException e) {
@@ -144,6 +145,7 @@ public class ParttimeDAO implements Parttime{
                 parttime.setWage(wage);
 
                 parttimeList.set(parttimeList.indexOf(parttime), parttime);
+                System.out.println("DB 수정 성공");
             }
 
         } catch (SQLException e) {
@@ -177,6 +179,7 @@ public class ParttimeDAO implements Parttime{
                 parttimeList.remove(parttimeList.indexOf(
                         new ParttimeVO(deleteNum, null, 0, 0)
                 ));
+                System.out.println("DB 삭제 성공");
             }
 
         } catch (SQLException e) {
