@@ -120,9 +120,7 @@ public class StudentDAO implements Student {
      */
     @Override
     public void input(PersonVO personVO) {
-
         StudentVO newStudent = (StudentVO) personVO;
-        if(studentlist.size() == 0) this.connect();
 
         //  studentlist가 비어있으면 DB에서 데이터 읽어오기
         if (studentlist.size() == 0) {
@@ -182,7 +180,6 @@ public class StudentDAO implements Student {
      */
     @Override
     public void update(PersonVO personVO) {
-
         StudentVO newStudent = (StudentVO) personVO;
 
         //  studentlist가 비어있으면 DB에서 데이터 읽어오기
