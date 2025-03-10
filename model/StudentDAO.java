@@ -10,24 +10,54 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+/**
+ * {@code StudentDAO} 클래스는 학생 데이터를 관리하기 위한 데이터 접근 객체(DAO)입니다.
+ * 데이터베이스에 연결되어 학생 데이터를 추가, 삭제, 수정, 검색, 정렬하는 기능을 제공합니다.
+ *
+ * 이 클래스는 다음과 같은 주요 기능을 포함합니다:
+ * - 데이터베이스 연결 및 쿼리 실행
+ * - 학생 데이터 추가, 변경, 삭제 및 정렬
+ * - 합계, 평균, 등급 계산
+ */
 public class StudentDAO implements Student {
+    /**
+     * 싱글톤(Singleton)으로 구현된 DAO 인스턴스
+     */
     private static StudentDAO dao;
 
+    /**
+     * 생성자를 private으로 설정하여, 외부에서의 객체 생성을 제한합니다.
+     */
     private StudentDAO() {}
 
+    /**
+     * DAO 인스턴스를 반환하는 싱글톤(Singleton) 메서드
+     *
+     * @return {@code StudentDAO} 인스턴스
+     */
     public static StudentDAO getInstance() {
         if (dao == null) dao = new StudentDAO();
 
         return dao;
     }
 
+    /** 학생 데이터 관리 리스트 */
     private ArrayList<StudentVO> studentlist = new ArrayList<>();
+    /** 데이터베이스 연결 객체 */
     private Connection conn;
+    /** SQL 문 실행을 위한 PreparedStatement 객체 */
     private PreparedStatement pstmt;
+    /** SQL 문 실행을 위한 Statement 객체 */
     private Statement stmt;
+    /** SQL 쿼리 결과를 저장하는 ResultSet 객체 */
     private ResultSet rs;
+    /** 저장 프로시저 호출을 위한 CallableStatement 객체 */
     private CallableStatement cs;
 
+    /**
+     * 데이터베이스 연결 종료 메서드
+     * 사용한 ResultSet, Statement, PreparedStatement, Connection 객체를 닫습니다.
+     */
     private void disConnect() {
         if (rs != null) try {rs.close();} catch (SQLException e) {}
         if (stmt != null) try {stmt.close();} catch (SQLException e) {}
@@ -35,6 +65,10 @@ public class StudentDAO implements Student {
         if (conn != null) try {conn.close();} catch (SQLException e) {}
     }
 
+    /**
+     * 데이터베이스 연결 및 학생 데이터 읽어오기
+     * DB에서 `Student` 테이블의 데이터를 읽어와 `studentlist` 리스트에 저장합니다.
+     */
     private void connect() {
         try {
             conn = DBUtil.getConnection();
@@ -76,7 +110,14 @@ public class StudentDAO implements Student {
         }
     }
 
-
+    /**
+     * 학생 데이터를 추가합니다.
+     *
+     * 데이터베이스와 리스트에 해당 학생 정보를 추가합니다.
+     * 추가된 데이터에 따라 합계, 평균, 등급 을 계산합니다.
+     *
+     * @param personVO 추가할 학생 데이터
+     */
     @Override
     public void input(PersonVO personVO) {
 
@@ -131,6 +172,14 @@ public class StudentDAO implements Student {
         }
     }
 
+    /**
+     * 학생 데이터를 수정합니다.
+     *
+     * 데이터베이스와 리스트에서 해당 학생 정보를 갱신합니다.
+     * 수정된 데이터에 따라 합계, 평균, 등급 등을 갱신하며 `studentlist` 내에서도 업데이트가 이루어집니다.
+     *
+     * @param personVO 수정할 학생 데이터 객체
+     */
     @Override
     public void update(PersonVO personVO) {
 
@@ -186,6 +235,14 @@ public class StudentDAO implements Student {
         }
     }
 
+    /**
+     * 학생 데이터를 삭제합니다.
+     *
+     * 데이터베이스와 `studentlist`에서 특정 ID에 해당하는 학생 데이터를 삭제합니다.
+     * 삭제 실패 시 오류 메시지를 출력합니다.
+     *
+     * @param deleteNum 삭제할 학생의 ID
+     */
     @Override
     public void delete(String deleteNum) {
         //  studentlist가 비어있으면 DB에서 데이터 읽어오기
@@ -217,6 +274,14 @@ public class StudentDAO implements Student {
         }
     }
 
+    /**
+     * 전체 학생 데이터를 특정 조건에 따라 정렬하여 출력합니다.
+     *
+     * `sortNum`에 따라 이름순(1), 학번순(2), 성적순(3) 등의 정렬을 수행하며,
+     * 정렬된 데이터는 단순 출력 목적으로 사용됩니다.
+     *
+     * @param sortNum 정렬 조건을 나타내는 번호
+     */
     public void totalSearch(int sortNum) {
         //  studentlist가 비어있으면 DB에서 데이터 읽어오기
         if (studentlist.size() == 0) {
@@ -230,6 +295,14 @@ public class StudentDAO implements Student {
         studentlist.forEach(System.out::println);
     }
 
+    /**
+     * 특정 학생 데이터를 검색하여 출력합니다.
+     *
+     * `studentlist`에 저장된 특정 ID를 가진 학생 데이터를 찾아 출력합니다.
+     * 학생 데이터가 없으면 특별한 동작 없이 진행됩니다.
+     *
+     * @param searchNum 검색할 학생의 ID
+     */
     @Override
     public void search(String searchNum) {
         //  studentlist가 비어있으면 DB에서 데이터 읽어오기
@@ -243,16 +316,26 @@ public class StudentDAO implements Student {
         System.out.println(temp);
     }
 
+    /**
+     * 학생 데이터를 정렬합니다.
+     *
+     * `sortNum` 변수에 따라 학생 데이터를 다양한 기준으로 정렬합니다:
+     * - 1: 이름순
+     * - 2: 학번순
+     * - 3: 성적순 (내림차순) 등
+     *
+     * @param sortNum 정렬 조건을 나타내는 번호
+     */
     @Override
     public void sort(int sortNum) {
         switch (sortNum) {
             case 1: // 이름순
                 studentlist.sort(Comparator.comparing(StudentVO::getName));
                 break;
-            case 2: // 사번순
+            case 2: // 학번순
                 studentlist.sort((o1, o2) -> o1.compareTo(o2));
                 break;
-            case 3: // 일한시간순
+            case 3: // 성적순
                 studentlist.sort(Comparator.comparing(StudentVO::getTotal).reversed());
                 break;
             case 4:
@@ -260,6 +343,13 @@ public class StudentDAO implements Student {
         }
     }
 
+    /**
+     * 학생의 총점을 계산합니다.
+     *
+     * 국어, 영어, 수학, 과학 점수를 합산하여 총점을 계산합니다.
+     *
+     * @param studentVO 총점을 계산할 학생 객체
+     */
     public void total(StudentVO studentVO){
         int total = studentVO.getKorean()
                     + studentVO.getEnglish()
@@ -268,12 +358,31 @@ public class StudentDAO implements Student {
         studentVO.setTotal(total);
     }
 
+    /**
+     * 학생의 평균 점수를 계산합니다.
+     *
+     * 총점을 과목 수로 나누어 평균값을 계산합니다.
+     *
+     * @param studentVO 평균 점수를 계산할 학생 객체
+     */
     @Override
     public void average(StudentVO studentVO){
         float average = studentVO.getTotal() / 4.0f;
         studentVO.setAverage(average);
     }
 
+    /**
+     * 학생의 등급을 결정합니다.
+     *
+     * 평균 점수에 따라 등급을 다음과 같이 지정합니다:
+     * - 90점 이상: A
+     * - 80점 이상: B
+     * - 70점 이상: C
+     * - 60점 이상: D
+     * - 60점 미만: F
+     *
+     * @param studentVO 등급을 계산할 학생 객체
+     */
     @Override
     public void grade(StudentVO studentVO){
         String grade;

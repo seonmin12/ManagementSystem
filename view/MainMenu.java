@@ -8,42 +8,35 @@ import vo.StudentVO;
 
 import java.util.Scanner;
 
+/**
+ * {@code MainMenu} 클래스는 전체 매니지먼트 프로그램의 메인 메뉴 역할을 담당하는 클래스입니다.
+ *
+ * <p>사용자가 선택한 메뉴에 따라 학생 관리, 직원 관리, 또는 알바 관리 시스템으로 분기됩니다.</p>
+ */
 public class MainMenu {
+    /**
+     * 프로그램의 주요 로직을 처리하는 컨트롤러 객체입니다.
+     * {@code ControllerImpl} 클래스의 인스턴스를 사용합니다.
+     */
     private Controller control;
+    /** 사용자 입력을 처리하기 위한 {@code Scanner} 객체 */
     private Scanner scan;
 
+    /**
+     * {@code MainMenu} 생성자는 컨트롤러 인스턴스를 초기화하고 Scanner 객체를 생성합니다.
+     */
     public MainMenu() {
         control = ControllerImpl.getInstance();
         scan = new Scanner(System.in);
     }
-    void managementStart(){
 
-        int choice;
+    // ////////////////////////////////////////////////////////////////
+    // ////////////////////////////////////////////////////////////////
+    // ////////////////////////////////////////////////////////////////
 
-        while(true){
-            showMainMenu();
-            choice = scan.nextInt();
-            control.choice(choice);
-
-            switch (choice){
-                case 1 :
-                    StudentSystem();
-                    break;
-                case 2 :
-                    EmployeeSystem();
-                    break;
-                case 3 :
-                    ParttimeSystem();
-                    break;
-                case 4 :
-                    System.out.println("시스템을 종료합니다.");
-                    break;
-                default :
-                    System.out.println("번호를 잘못입력하셨습니다.");
-            }
-
-        }
-    }
+    /**
+     * 메인 메뉴를 보여주는 메서드입니다.
+     */
     void showMainMenu(){
         System.out.println();
         System.out.println("\t------------------------------");
@@ -54,8 +47,16 @@ public class MainMenu {
         System.out.println("\t------------------------------");
         System.out.print("\t입력: ");
     }
-    void StudentSystem() {
 
+    // ////////////////////////////////////////////////////////////////
+    // ////////////////////////////////////////////////////////////////
+    // ////////////////////////////////////////////////////////////////
+
+    /**
+     * 학생 관리 시스템을 실행하는 메서드입니다.
+     * <p>학생 입력, 삭제, 수정, 조회, 검색 등의 작업을 수행합니다.</p>
+     */
+    void StudentSystem() {
         int choice;
 
         while (true) {
@@ -92,6 +93,9 @@ public class MainMenu {
         }
     }
 
+    /**
+     * 학생 관리 하위 메뉴를 보여주는 메서드입니다.
+     */
     void showStudentMenu(){
         System.out.println();
         System.out.println("\t------------------------------");
@@ -103,6 +107,10 @@ public class MainMenu {
         System.out.println("\t------------------------------");
         System.out.print("\t입력: ");
     }
+
+    /**
+     * 학생 데이터를 입력받아 {@code StudentVO} 객체로 생성하고 컨트롤러에 전달합니다.
+     */
     void Sinput() {
         System.out.println("\t------------------------------");
         System.out.print("\t학번: ");
@@ -122,6 +130,10 @@ public class MainMenu {
         StudentVO studentVO = new StudentVO(sno,name,korean,english,math,science);
         control.input(studentVO);
     }
+
+    /**
+     * 특정 학생 데이터를 삭제하는 메서드입니다.
+     */
     void Sdelete(){
         System.out.println("\t------------------------------");
         System.out.print("\t삭제할 학번: ");
@@ -129,8 +141,11 @@ public class MainMenu {
         System.out.println("\t------------------------------");
 
         control.delete(deleteNum);
-
     }
+
+    /**
+     * 특정 학생 데이터를 수정하는 메서드입니다.
+     */
     void Supdate(){
         System.out.println("\t------------------------------");
         System.out.print("\t수정할 학번: ");
@@ -151,8 +166,11 @@ public class MainMenu {
 
         StudentVO studentVO = new StudentVO(sno,nname,nkorean,nenglish,nmath,nscience);
         control.update(studentVO);
-
     }
+
+    /**
+     * 모든 학생 데이터를 조회하고 정렬 옵션에 따라 리스트를 출력하는 메서드입니다.
+     */
     void StotalSearch(){
         System.out.println("\t------------------------------");
         System.out.println("\t1. 이름순\t\t2. 학번순");
@@ -168,6 +186,10 @@ public class MainMenu {
         System.out.println("\t------------------------------------------------------------------------------------------------");
         control.totalSearch(sortNum);
     }
+
+    /**
+     * 특정 학생 데이터를 학번으로 검색하여 출력하는 메서드입니다.
+     */
     void Ssearch(){
 
         System.out.println("\t------------------------------");
@@ -176,14 +198,24 @@ public class MainMenu {
         System.out.println("\t------------------------------");
 
         control.search(sno);
-
     }
+
+    /**
+     * 학생 관리 하위 시스템을 종료하고 메인 메뉴로 돌아갑니다.
+     */
     void exit(){
         System.out.println("\t** 게시판 종료 **");
         System.exit(0);
     }
 
+    // ////////////////////////////////////////////////////////////////
+    // ////////////////////////////////////////////////////////////////
+    // ////////////////////////////////////////////////////////////////
 
+    /**
+     * 직원 관리 시스템을 실행하는 메서드입니다.
+     * <p>직원 입력, 삭제, 수정, 조회, 검색 등의 작업을 수행합니다.</p>
+     */
     void EmployeeSystem() {
 
         int choice;
@@ -227,9 +259,11 @@ public class MainMenu {
                     exit();
             }
         }
-
     }
 
+    /**
+     * 정규직 직원 데이터를 입력받아 {@code FulltimeVO} 객체로 생성하고 컨트롤러에 전달합니다.
+     */
     void Einput() {
         System.out.println("\t------------------------------");
         System.out.print("\t사번: ");
@@ -246,6 +280,9 @@ public class MainMenu {
         control.input(fulltimeVO);
     }
 
+    /**
+     * 특정 정규직 직원 데이터를 삭제하는 메서드입니다.
+     */
     void Edelete(){
         System.out.println("\t------------------------------");
         System.out.print("\t삭제할 사번: ");
@@ -255,6 +292,10 @@ public class MainMenu {
         control.delete(deleteNum);
     }
 
+    /**
+     * 특정 정규직 직원 데이터를 수정하는 메서드입니다.
+     * <p>수정할 정규직 직원의 사번을 입력받고, 새로운 이름, 실적, 월급 데이터를 입력받아 {@code FulltimeVO} 객체를 생성합니다.</p>
+     */
     void Eupdate(){
         System.out.println("\t------------------------------");
         System.out.print("\t수정할 사번: ");
@@ -273,6 +314,10 @@ public class MainMenu {
         control.update(fulltimeVO);
     }
 
+    /**
+     * 모든 정규직 직원 데이터를 조회하고 정렬 옵션에 따라 리스트를 출력하는 메서드입니다.
+     * <p>정렬 옵션은 이름순, 사번순, 실적순으로 선택할 수 있습니다.</p>
+     */
     void EtotalSearch(){
         System.out.println("\t------------------------------");
         System.out.println("\t1. 이름순\t\t2. 사번순");
@@ -289,6 +334,9 @@ public class MainMenu {
         control.totalSearch(sortNum);
     }
 
+    /**
+     * 특정 정규직 직원 데이터를 사번으로 검색하여 출력하는 메서드입니다.
+     */
     void Esearch(){
         System.out.println("\t------------------------------");
         System.out.print("\t검색할 사번: ");
@@ -298,6 +346,14 @@ public class MainMenu {
         control.search(searchNum);
     }
 
+    // ////////////////////////////////////////////////////////////////
+    // ////////////////////////////////////////////////////////////////
+    // ////////////////////////////////////////////////////////////////
+
+    /**
+     * 시간제 직원 관리 시스템을 실행하는 메서드입니다.
+     * <p>알바 입력, 삭제, 수정, 조회, 검색 등의 작업을 수행합니다.</p>
+     */
     void ParttimeSystem() {
         int choice;
 
@@ -341,6 +397,10 @@ public class MainMenu {
             }
         }
     }
+
+    /**
+     * 시간제 직원 데이터를 입력받아 {@code ParttimeVO} 객체로 생성하고 컨트롤러에 전달합니다.
+     */
     void Pinput() {
         System.out.println("\t------------------------------");
         System.out.print("\t알바 번호: ");
@@ -357,6 +417,9 @@ public class MainMenu {
         control.input(parttimeVO);
     }
 
+    /**
+     * 특정 시간제 직원 데이터를 삭제하는 메서드입니다.
+     */
     void Pdelete(){
         System.out.println("\t------------------------------");
         System.out.print("\t삭제할 알바 번호: ");
@@ -366,6 +429,10 @@ public class MainMenu {
         control.delete(deleteNum);
     }
 
+    /**
+     * 특정 시간제 직원 데이터를 수정하는 메서드입니다.
+     * <p>수정할 시간제 직원 번호를 입력받고, 새로운 이름, 시급, 근무 시간 데이터를 입력받아 {@code ParttimeVO} 객체를 생성합니다.</p>
+     */
     void Pupdate(){
         System.out.println("\t------------------------------");
         System.out.print("\t수정할 알바 번호: ");
@@ -384,6 +451,10 @@ public class MainMenu {
         control.update(parttimeVO);
     }
 
+    /**
+     * 모든 시간제 직원 데이터를 조회하고 정렬 옵션에 따라 리스트를 출력하는 메서드입니다.
+     * <p>정렬 옵션은 이름순, 사번순, 일한시간순으로 선택할 수 있습니다.</p>
+     */
     void PtotalSearch(){
         System.out.println("\t------------------------------");
         System.out.println("\t1. 이름순\t\t2. 사번순");
@@ -400,6 +471,9 @@ public class MainMenu {
         control.totalSearch(sortNum);
     }
 
+    /**
+     * 특정 시간제 직원 데이터를 번호로 검색하여 출력하는 메서드입니다.
+     */
     void Psearch(){
         System.out.println("\t------------------------------");
         System.out.print("\t검색할 알바 번호: ");
@@ -409,10 +483,49 @@ public class MainMenu {
         control.search(searchNum);
     }
 
+    // ////////////////////////////////////////////////////////////////
+    // ////////////////////////////////////////////////////////////////
+    // ////////////////////////////////////////////////////////////////
 
+    /**
+     * 프로그램의 메인 메서드입니다.
+     *
+     * @param args 커맨드라인 인수
+     */
     public static void main(String[] args) {
         new MainMenu().managementStart();
-
     }
 
+    /**
+     * 매니지먼트 프로그램을 시작하는 메서드입니다.
+     * <p>메인 메뉴를 표시하고 사용자의 명령에 따라 적절한 시스템으로 분기합니다.</p>
+     */
+    void managementStart(){
+
+        int choice;
+
+        while(true){
+            showMainMenu();
+            choice = scan.nextInt();
+            control.choice(choice);
+
+            switch (choice){
+                case 1 :
+                    StudentSystem();
+                    break;
+                case 2 :
+                    EmployeeSystem();
+                    break;
+                case 3 :
+                    ParttimeSystem();
+                    break;
+                case 4 :
+                    System.out.println("시스템을 종료합니다.");
+                    break;
+                default :
+                    System.out.println("번호를 잘못입력하셨습니다.");
+            }
+
+        }
+    }
 }
