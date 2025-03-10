@@ -129,8 +129,8 @@ ManagementSystem/
 
 ## 제작자
 
-- [정유진](): 사용자 인터페이스 담당 ()
-- [김성준](): 학생 모델 담당 ()
+- [정유진](https://github.com/yujini02): 사용자 인터페이스 담당 (yujinjeong76@gmail.com)
+- [김성준](https://github.com/kimsj18): 학생 모델 담당 (kimsj0118@gmail.com)
 - [김선민](https://github.com/seonmin12): 직원 모델 담당 (seonmin.kim1030@gmail.com)
 - [박건희](https://github.com/psns0122): DB 모델링 담당 (psns0122@nave.com)
 
